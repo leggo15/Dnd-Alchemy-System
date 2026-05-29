@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Three Notebooks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Caveat:wght@400;600;700&family=Cinzel:wght@500;600;700&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='52' font-size='52'>%F0%9F%93%96</text></svg>" />
+
+  <!--
+    Layout overrides specific to the stripped-down book viewer. The base
+    styles.css is preserved unchanged so every book-related rule (covers,
+    parchment pages, ruled lines, hard-cover frames, themed bindings, etc.)
+    keeps working exactly as designed.
+  -->
+  <style>
+    /* Body is `display: flex; flex-direction: column` from styles.css, so
+       on the vertical (main) axis we centre with justify-content. */
+    body {
+      justify-content: center;
+      align-items: center;
+    }
+    /* `main { flex: 1; ... }` in styles.css stretches main to fill the
+       viewport. We then turn main into its own flex container that centres
+       the workbench on both axes. */
+    main {
+      width: 100%;
+      max-width: none;
+      padding: clamp(12px, 3vw, 32px);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    /* The workbench is the visible "table" frame. We let it grow up to a
+       larger comfortable width so the flipbook inside has more room to
+       scale up. */
+    .workbench {
+      width: 100%;
+      max-width: min(1400px, 96vw);
+      margin: 0 auto;
+    }
+    /* Give the book itself a little breathing room inside the workbench
+       padding and let it stretch wider than its original 580 px logical
+       spread — the cap is removed in ui.js so the inner page-flip will
+       scale up to match. */
+    .workbench .book {
+      max-width: none;
+    }
+
+    /* ----- Book-select (closed stack) scaling -------------------------
+       The original closed-book chooser was sized for a small column
+       (shell 820×380, each book 230×320). The workbench is much wider
+       now, so those dimensions left the three books looking dwarfed.
+       Scale everything up proportionally — shelf, each book, the glyph,
+       title, and subtitle — so the chooser feels at home in the larger
+       frame. The cover styling itself (gradients, gold-rim frame, leaf
+       texture, hover lift) all comes from styles.css and is preserved
+       unchanged; we're only adjusting *size*. */
+    .workbench .book-flip.book-stack-mode {
+      min-height: clamp(420px, 60vh, 620px);
+    }
+    .workbench .book-stack-shell {
+      width: min(1180px, 100%);
+      height: clamp(420px, 60vh, 580px);
+    }
+    .workbench .book-stack-item {
+      width: clamp(240px, 26vw, 340px);
+      height: clamp(340px, 46vh, 470px);
+    }
+    .workbench .book-stack-item .hard-cover-glyph {
+      font-size: clamp(46px, 5.2vw, 64px);
+      margin-bottom: 12px;
+    }
+    .workbench .book-stack-item .hard-cover-title {
+      font-size: clamp(20px, 1.9vw, 26px);
+    }
+    .workbench .book-stack-item .hard-cover-subtitle {
+      font-size: clamp(15px, 1.4vw, 19px);
+    }
+
+    /* ----- Book-select pill: viewport-fixed, bottom-right ------------
+       The button is now appended to <body> so it can be fixed to the
+       viewport regardless of the workbench's overflow/transform context.
+       The original `.workbench .book-select-btn` rules in styles.css
+       don't match anymore, so we port the parchment styling here and
+       promote position to `fixed` in the lower-right. */
+    #book-select-btn {
+      position: fixed;
+      bottom: clamp(16px, 2.4vh, 28px);
+      right:  clamp(16px, 2.4vw, 32px);
+      z-index: 60;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 20px;
+      font-family: var(--serif, "Cormorant Garamond", serif);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      color: #2a1808;
+      background:
+        linear-gradient(180deg, var(--parchment-1, #f6e6c4) 0%, var(--parchment-3, #d6c08a) 100%);
+      border: 1px solid rgba(80, 50, 20, 0.5);
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 250, 230, 0.6),
+        0 6px 16px rgba(0, 0, 0, 0.55);
+      transition: filter 120ms ease, transform 120ms ease, opacity 200ms ease;
+      opacity: 0;
+    }
+    #book-select-btn.is-visible {
+      display: inline-flex;
+      opacity: 1;
+    }
+    #book-select-btn:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+    #book-select-btn:active {
+      transform: translateY(0);
+    }
+    #book-select-btn > span {
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    /* ----- Candle perched above the back panel ----------------------
+       Originally the candle sat *inside* the workbench (top: 18px right:
+       46px, clipped by .workbench's overflow: hidden). Lift it so it
+       perches on the workbench's upper edge with the body extending above
+       the back panel — like a real candle on the rear of a desk. The
+       workbench also needs `overflow: visible` for the candle (and its
+       warm halo) to poke out. The dust motes still get clipped by their
+       own .wb-motes { overflow: hidden } so they don't escape. */
+    .workbench {
+      overflow: visible;
+    }
+    .wb-candle {
+      top: auto;
+      /* Base of the stick tucks a few px behind the workbench rim so it
+         reads as "sitting on" the back panel rather than floating. */
+      bottom: calc(100% - 6px);
+      right: clamp(36px, 5vw, 72px);
+      /* The drop-shadow now has nothing below it to land on; soften and
+         lengthen it so it casts onto the workbench surface beneath. */
+      filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7));
+    }
+    /* ---- Second, taller candle to the left of the first ---------
+       Same DOM shape — its stick is just longer (50 px vs 30 px). The
+       wax/flame/glow are children positioned by `bottom:` inside the
+       candle box, so once we lengthen the stick we have to bump those
+       offsets up by the same amount, otherwise the flame would float in
+       mid-air next to the stick. The bounding box also grows so the
+       drop-shadow lands correctly. */
+    .wb-candle--tall {
+      /* Sit immediately to the LEFT of the first candle. The +33 px
+         offset is the first candle's width (28 px) plus a 5 px gap, so
+         the two candles sit close together no matter how the responsive
+         `clamp()` resolves at the current viewport. */
+      right: calc(clamp(36px, 5vw, 72px) + 22px);
+      height: 76px;
+    }
+    .wb-candle--tall .wb-candle-stick { height: 50px; }
+    .wb-candle--tall .wb-candle-wax   { bottom: 48px; }
+    .wb-candle--tall .wb-candle-flame { bottom: 52px; }
+    .wb-candle--tall .wb-candle-glow  { bottom: 44px; }
+
+    /* Mirror the existing small-screen tweak (was anchored top-right) so
+       the candle stays nicely scaled and aligned in the new position.
+       The taller sibling stays slotted just to the left even on narrow
+       screens — same 22 px offset (28 px candle width + 5 px gap). */
+    @media (max-width: 700px) {
+      .wb-candle {
+        right: 22px;
+        transform: scale(0.85);
+        transform-origin: bottom right;
+      }
+      .wb-candle--tall {
+        right: calc(22px + 22px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- The Workbench wrapper provides the leather-bound, candle-lit ambience
+         the book lives in (corner studs, candle, drifting motes). All this
+         styling is preserved from the original alchemy app so the book reads
+         the same way it always did, just centered on its own. -->
+    <div class="workbench" role="region" aria-label="The three notebooks">
+      <span class="wb-corner tl" aria-hidden="true"></span>
+      <span class="wb-corner tr" aria-hidden="true"></span>
+      <span class="wb-corner bl" aria-hidden="true"></span>
+      <span class="wb-corner br" aria-hidden="true"></span>
+      <div class="wb-candle" aria-hidden="true">
+        <div class="wb-candle-stick"></div>
+        <div class="wb-candle-wax"></div>
+        <div class="wb-candle-flame"></div>
+        <div class="wb-candle-glow"></div>
+      </div>
+      <!-- A second candle just to the left of the first, with a longer
+           stick so it stands a bit taller than its neighbour. -->
+      <div class="wb-candle wb-candle--tall" aria-hidden="true">
+        <div class="wb-candle-stick"></div>
+        <div class="wb-candle-wax"></div>
+        <div class="wb-candle-flame"></div>
+        <div class="wb-candle-glow"></div>
+      </div>
+      <div class="wb-motes" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="book" id="book">
+        <div class="book-flip" id="book-flip" aria-live="polite"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Turn.js (and its required jQuery 1.7) — loaded synchronously before
+       the app module so window.jQuery / $.fn.turn are ready by the time
+       ui.js initialises the flipbook. -->
+  <script src="libraries/turnjs4/extras/jquery.min.1.7.js"></script>
+  <script src="libraries/turnjs4/lib/turn.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

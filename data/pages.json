@@ -1,0 +1,381 @@
+{
+  "$schema": "Each book has an `id`, `title`, `subtitle`, `glyph`, `theme` (blue/red/green), optional `coverStats`, and a `pages` array. Each page is { title?, subtitle?, sections: [ ... ] } — page text MUST live inside `sections`, never directly on the page. Each section may set: `heading` (subsection title), `term` (runin bold lead-in; alone = a bare label), `body` (a string or array of paragraph strings), and/or `list` (array of bullet strings). When `pages` is empty or contains no valid sections, the viewer shows a single placeholder leaf so the cover and binding still render correctly.",
+
+  "books": [
+    {
+      "id": "ingredients",
+      "title": "Ingredients",
+      "subtitle": "Field Catalogue",
+      "glyph": "\ud83c\udf3f",
+      "theme": "blue",
+      "coverStats": "",
+      "pages": [
+        {
+          "title": "Ingredients",
+          "subtitle": "Field Catalogue",
+          "sections": [
+            { "body": "Future content." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recipes",
+      "title": "Potion Recipes",
+      "subtitle": "Known Formulae",
+      "glyph": "\u2697",
+      "theme": "red",
+      "coverStats": "",
+      "pages": [
+        {
+          "title": "Potion Recipes",
+          "subtitle": "Known Formulae",
+          "sections": [
+            { "body": "Future content." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "instructions",
+      "title": "The Alchemist's Textbook",
+      "subtitle": "Workbench Guide",
+      "glyph": "",
+      "theme": "green",
+      "coverStats": "Anoha nij vavvaj \u2014 Illum 302",
+      "pages": [
+        {
+          "title": "The Alchemist's Textbook",
+          "subtitle": "by Anoha nij vavvaj \u2014 Illum 302",
+          "sections": [
+            {
+              "body": "This book delves into the world of alchemy. It details all the natural and exotic essences \u2014 what they are, where to find them, how to test for them, and generally what each category entails. The book also covers Essence Discordance, Balanced and off-balance brewing, as well as side effects and unique characteristics. And lastly, taboos and common dangers are covered."
+            }
+          ]
+        },
+        {
+          "title": "Alchemy's Essence",
+          "subtitle": "A study of the world's quiet dance.",
+          "sections": [
+            {
+              "body": "Alchemy is at its core a study of the world around us and its interaction with itself. How a drop of water changes the texture of wood, how a strip of meat changes taste when cooked, or how lightning chars a piece of wood atop a mountain versus in the low lands. These are all inherently alchemical interactions, and from this can be derived that essentially all of nature takes part in a complex yet balanced dance of interactions \u2014 from the understood to the strange and even the esoteric."
+            },
+            {
+              "body": "In alchemy, all items and elements are categorized based on what sort of interactions they tend to create with the world around them. These categories are referred to as \"essences\". There are in total 29 known essences as of the year 277, with the last new discovery being the Tidal essence, first described by the scholar Aelfrig Kellen in his publication \"The World Eroded by Time\". All potions and alike derive their effects and characteristics from the essence of their ingredients."
+            },
+            {
+              "body": "There are three inherently different categories of essences: the Natural essence, the Strange essence, and the Emergent essence. In most writing the Strange and Emergent essences are simply referred to as the Exotic essences."
+            },
+            {
+              "body": "The Natural ones are common elements found in nearly anything around us \u2014 we are most used to calling them tastes. In the craft of potion making, these are used as bases and supportive essences to achieve a balanced brew; they hold no esoteric characteristics by themselves."
+            },
+            {
+              "body": "The Strange essences are much more nuanced and cover anything unexplainable: a rock that seems to glow for no reason, a piece of metal that attracts other metals, or in the case of the Tidal essence, items that can change where the water surface rests. These are the most common drivers of a potion's effects and characteristics."
+            },
+            {
+              "body": "And lastly, the Emergent essences are perhaps the most unique. These emerge from interactions between intelligence and nature."
+            },
+            {
+              "body": "As an example, consider the old man on his farm \u2014 his tools have been with him his entire life, and thus he has developed a strong emotional bond with them. Half of them might at this point be broken and the man too old to work the field with them today, but he cannot bring himself to rid the house of them. In tools such as these, one would then expect the Bond essence to emerge."
+            },
+            {
+              "body": "In brewing potions, Emergent essences \u2014 while less common \u2014 can still be the main driver of a potion's effects, but more often than not they play a supportive role, nudging the effects in a desired direction."
+            }
+          ]
+        },
+        {
+          "title": "Essences, and How to Find Them",
+          "subtitle": "A field guide for the apprentice.",
+          "sections": [
+            {
+              "body": "This section will offer an idea of how to find the various natural and exotic essences, as well as give a detailed account of how to test a substance for any given essence."
+            },
+            {
+              "heading": "The Natural Essences"
+            },
+            {
+              "body": "There are a total of nine natural essences known. These are named after the six tastes, the tangy taste of wood, and finally its basic and acidic properties. The natural essences are generally found in all organic matter; in addition, they are found in many different minerals. However, there is no clear rule as to how these essences are distributed through different matter, and the category is fairly skewed in its distribution. Tannic, for example, is much more common than Hot or Sweet."
+            },
+            {
+              "body": "Any item with a sufficiently strong taste of any of the Natural essences' namesake should contain the essence in question. However, in some cases testing by taste is infeasible due to the nature of the item or other factors. In these cases there are steps that can be taken; where possible, the steps are listed below."
+            },
+            {
+              "term": "Salt",
+              "body": "To test for salt essence, grind to a paste and mix with distilled water, filter the mix through a clean silk cloth, and let the water dry up. If salt essence is present, small white crystals will form in the water's absence."
+            },
+            {
+              "term": "Sweet",
+              "body": "Grind a small portion to powder and stir into warm distilled water. Add a pinch of fresh baker's yeast and lid the vessel with a cleaned bladder tied tight at the neck. Set it in a warm place, no hotter than the inside of a closed oven left to cool overnight. By the next morning, if sweet essence is present, the bladder will be drum-tight with air."
+            },
+            {
+              "term": "Bitter or Tannic",
+              "body": [
+                "Powder the sample and add it to a thumb's depth of dry red wine in a clear glass, alongside a small handful of clean iron filings. Let it stand for one hour, undisturbed. If bitter or tannic essence is present, the wine will darken to a deep ink-black and a fine sediment will collect about the filings.",
+                "Tannic can be further confirmed by fining: move the wine alone to a clean glass, then add the clear part of a fresh egg lightly beaten beforehand. If tannic essence is present the mixture will turn cloudy and small grey-white flecks will gather at the bottom of the glass."
+              ]
+            },
+            {
+              "term": "Sour",
+              "body": "Grind to a paste and add a single small dollop to a clean cup of fresh milk, no more than a pea's worth. Stir once and let stand for a count of sixty. If sour essence is present, the milk will curdle into very fine, evenly distributed flecks."
+            },
+            {
+              "term": "Savory",
+              "body": "There are no known methods to test for savory essence without directly tasting it."
+            },
+            {
+              "term": "Hot",
+              "body": "Reduce the sample to fine powder and let it dry thoroughly. With a long pair of tweezers, sprinkle a pinch onto a still-burning candle flame. If hot essence is present, the flame will flare up and emit a clear dry crackle for two or three heartbeats."
+            },
+            {
+              "term": "Acidic and Basic",
+              "body": "Prepare in advance a strip of clean linen soaked in the boiled-down juice of red cabbage, and dried in shade. To test, place a small portion of the sample upon the strip and add a single drop of distilled water. If basic essence is present, the strip will turn deep blue, then green if the essence is strong; if the sample is acidic it turns pink instead."
+            },
+            {
+              "heading": "The Exotic Essences"
+            },
+            {
+              "body": "Exotic essences are simultaneously less nuanced but harder to test for than Natural essences. Some are exceedingly simple and can be done in a matter of seconds, while others can require years of observation. In the case of Emergent essences, these are generally not testable; you have to know the source and history of them to be certain. So if you want to make sure a tuft of \"battlefield reed\" contains Strife and Death essence, you have to confirm the history of the place the reed was sourced from."
+            },
+            {
+              "term": "Strange Essences"
+            },
+            {
+              "term": "Light",
+              "body": "Is most commonly found in naturally luminous substances and objects. To test for Light essence, bring the substance into a completely dark place, such as a cellar or cavern, and check if the substance glows weakly."
+            },
+            {
+              "term": "Dark",
+              "body": "Is found in things that form in complete darkness, such as certain mushrooms, crystals, rock coal, or other minerals. To test for Dark essence, set the substance on a clear surface a known distance from the ground, measure the item's width and its shadow width; if the shadow width measures more than 10 percent larger than its host item, it contains Dark essence."
+            },
+            {
+              "term": "Amber",
+              "body": "It has only been found in its namesake. To identify real amber, hold it to a light and look for shimmering within it \u2014 it should look like small flakes of gold are trapped inside. The item is also surprisingly light."
+            },
+            {
+              "term": "Magnise",
+              "body": "Any lodestone contains Magnise essence; objects acting like lodestones also generally contain Magnise. Magnise is the simplest essence to test for: just hold the object to a metallic surface known to attract lodestones and see if it sticks to it."
+            },
+            {
+              "term": "Lithic",
+              "body": "Is generally found in certain minerals and other things carved from rock. It can also be found in organic things such as scales or bones. To test for Lithic essence, extract a granule of the substance, no more than a grain of sand's worth, place it on an anvil and hit it with a hammer. Lithic essence should be present if this produces sparks of white, blue, or purple colors."
+            },
+            {
+              "term": "Aether",
+              "body": "Is associated with great heights or the weather; it can most easily be utilized by brewing at a mountain top, where the air brewed in naturally contains Aether. Lightning-struck wood, storm-glass, or feathers from high-flying birds are also fine sources of Aether. To test for it, find something the item floats in, then find an equivalent item that contains no Aether to be used as a control. Place both items in the liquid and see if the suspected Aether item floats higher than the control."
+            },
+            {
+              "term": "Flux",
+              "body": "Is found in things that resist holding a single state \u2014 mercury, certain fungi, and liquid water below the freezing point are the most common sources. To test for Flux, have someone hide the suspected Flux item in a messy and/or dimly lit place, but not obscured. Then you have to try to find the object. Repeat this a few times; Flux items should be easy to spot through your peripheral view as something that suddenly moved."
+            },
+            {
+              "term": "Sidereal",
+              "body": "Are found in meteorites, star-metal, materials left under open sky during specific celestial events; some creatures and plants usually contain it. Sidereal is considered the hardest to test for of the testable essences due to the time it takes. During some cosmic events certain sidereal items will shimmer or even lightly sparkle, but these events are cyclical and can be very rare. Confirmed Sidereal items are thusly valued highly due to the nature of its testing. It is not cosmic events themselves that are rare, but each Sidereal item corresponds to specific events and only reacts to those events, thus making this process a long one more often than not."
+            },
+            {
+              "term": "Specular",
+              "body": "Is present in naturally reflective or polished surfaces, such as flaked obsidian, long-undisturbed still water, or a mirror fragment. Testing for Specular is generally not necessary past a simple visual inspection."
+            },
+            {
+              "term": "Tidal",
+              "body": "Is found in things shaped by cycles, such as rounded pebbles on a beach or the walls of a river cavern. To test for Tidal essence, place the item in a tub and keep an identical one beside it; fill both with water until they measure the same water height. Over the next 12 hours, keep track of the water level on 4 different sides each hour. The tub with no item should read a constant height on all sides, while the Tidal item should show slight changes over the recording time."
+            },
+            {
+              "term": "Emergent Essences"
+            },
+            {
+              "term": "Life",
+              "body": "Is found in any living material; however on death it fades out quickly, so any usage of Life essence needs to be planned beforehand. If you need a piece of plant with Life essence it is best to have a live plant to take from beside the brewing stand. Life essence takes no more than 5 minutes to seep out, and can take as little as a few seconds in some cases."
+            },
+            {
+              "term": "Death",
+              "body": "Forms in any material that used to house a great deal of Life essence; however, it can be slow to emerge. For example, an animal's extracted heart might have once contained an abundance of Life essence, but after being left to decay for a few weeks, Death essence will have formed in its stead."
+            },
+            {
+              "term": "Reminiscence",
+              "body": "Builds in objects that are repeatedly recalled, retold, or revered: a sword named in stories, a wedding ring worn for fifty years, the threshold-stone of a famous inn."
+            },
+            {
+              "term": "Desolance",
+              "body": "Is found in items and material that is or has been actively forgotten. An ornament at the back of a shelf accumulates Desolance over time as the ones that put it there forget it exists. A general rule of thumb is that if the item once contained Reminiscence and then was forgotten, the chance of Desolance is very high."
+            },
+            {
+              "term": "Bond",
+              "body": "Accumulates in things long associated with a single being or place: a shepherd's crook, a favorite chair, a familiar's perch. Anything that holds great value to one or more individuals, valued for emotional rather than material reasons."
+            },
+            {
+              "term": "Gild",
+              "body": "Accumulates in objects desired by a large number of intelligent creatures. Gold or gems are the most descriptive objects of Gild, but it might also be found in things such as deeds or certain animal parts. Theoretically, if you were to convince a nation to hold a single leaf in high regard, even in that leaf Gild would emerge."
+            },
+            {
+              "term": "Itinerant",
+              "body": "Accumulates in things that have traveled far without staying anywhere long enough to call it home: a courier's well-worn satchel, the deck-planks of a ship that has crossed the sea for decades, coins that have changed hands across a continent."
+            },
+            {
+              "term": "Fireside",
+              "body": [
+                "Emerges in materials from places of long, unbroken habitation. Stones from a fireplace used every winter for a century, or tools that have been used for their purpose to the point of wearing in \u2014 the whetstone of a working blacksmith, a well-walked stair.",
+                "The important thing to remember is that Fireside only emerges in things the people who've lived there actually associated with home; that might not be all the bricks of a chimney, but highly likely the few front-facing ones where food has been made for generations, or the threshold stone of the house."
+              ]
+            },
+            {
+              "term": "Strife",
+              "body": "Arises in objects present at conflict zones: a place where bandits lay their ambush, or the site of a battle between armies. Battlefield soil, or plants from such places, are great sources of Strife."
+            },
+            {
+              "term": "Concord",
+              "body": "Emerges in objects that were present during events of great harmony and peace, such as a wedding ceremony or the site of a peace treaty. The papers themselves of a peace treaty usually have great stores of Concord essence."
+            }
+          ]
+        },
+        {
+          "title": "How to Extract Essences",
+          "subtitle": "From taste to ash, the brewer's preparations.",
+          "sections": [
+            {
+              "body": "The essence extraction process varies greatly from one ingredient to another. The simplest are the Natural essences \u2014 ingredients containing natural essences are always prepared for brewing as long as the taste is present."
+            },
+            {
+              "body": "However, some ingredients are much harder to prepare. A number of ingredients containing exotic essences are solid objects such as a piece of wood, paper, a stone, or even metallic objects. In some of these cases it might be prudent to find if the item contains the desired essences in a transformed state, such as charcoal-ed, dissolved, or pickled. Most of the time, if the object in question can be burned, its ashes will carry some of the object's essence for a short time after burning, making this a desirable route for many."
+            },
+            {
+              "body": "Powdering or mushing ingredients typically does not change the ingredient's essence balance, so these are good methods of extraction if feasible. An example where powdering changes an ingredient is Amber: Amber naturally contains one part Amber and one part Light essence, but through powdering the Light essence is lost, so Amber becomes a mono-essence once powdered."
+            },
+            {
+              "heading": "Special essence extractions"
+            },
+            {
+              "body": "Some essences are much harder to extract or utilize than others. Magnise requires the brew to absorb a powdered lodestone in most cases; however, this powder will stick to any metallic surface, which will keep it from mixing into the brew. For brews requiring Magnise it is best to use a non-metallic cauldron, such as a fire-proofed wooden pot."
+            },
+            {
+              "body": "Objects containing Aether can be hard to come by, so it is generally considered easiest to simply brew the potion at very high altitudes when requiring Aether. Specular can also be fairly tricky to deal with \u2014 for example, if the ingredient in question is a liquid, it should have stayed completely still for a month before usage, and at that time it is only present for a few seconds after moving, to be used in a brew. In these situations, make sure to add the Specular-containing liquid as the last ingredient."
+            },
+            {
+              "body": "Most ingredients need to be completely absorbed into the brew, but some can be used in different ways. For example, some Bond ingredients (a wedding ring, for instance) can be placed in the bottle upon brew completion and then left in for the distillation time and until usage. As long as the ring stays in the bottle it will function as a complete potion, and upon potion ingestion the ring can be reused in the next potion."
+            }
+          ]
+        },
+        {
+          "title": "Ingredients",
+          "subtitle": "Where the essence balance comes from.",
+          "sections": [
+            {
+              "body": "Most substances and objects have at least some essence in them, especially natural essences; however, most potions require at least one exotic essence. All ingredients consist of a set of essences. Those containing a multitude of essences are called poly-essence substances; single-essence substances are called mono-essence substances. These are exceedingly rare and can often fetch a very high price. The best examples are powdered Amber, mercury for Flux, and salt for the Salt essence."
+            },
+            {
+              "body": "For brewing purposes, about two thirds of items found will not have enough of any given essence to be used. The goal with a potion is an essence balance that results in specific desired effects, and this requires high concentrations of essences. So potion ingredients can be hard to find at times."
+            }
+          ]
+        },
+        {
+          "title": "Brewing",
+          "subtitle": "The patient art of stirring essences together.",
+          "sections": [
+            {
+              "body": "The process of brewing varies heavily in its complexity based on the number of essences required, the type, and the ingredients themselves. There are several considerations to make when brewing: for example, the mixture will most likely be an unbalanced brew during the process of making it, which can be hazardous depending on the essences involved. With this in mind it is recommended to determine what ingredients to put in first and last based on the severity of their side effects during brewing."
+            },
+            {
+              "body": "A brew should start with a standard cauldron two thirds full of water; then the ingredients can be added while stirring. Some ingredients require special conditions such as a brewing location or specific brewing equipment. These are too numerous to detail here \u2014 they are things one should research while in the field or while reading about new ingredients."
+            },
+            {
+              "body": "Ingredient essence is generally given as \"parts\" per unit; this is a standardized method of defining how much of a substance is needed for a specific concentration of said essence. As long as the percentage mixture of the cauldron contents is correct the brew will succeed, so keeping to the correct number of essence parts described in a recipe results in the correct whole for the desired brew."
+            },
+            {
+              "body": "When the brew is done, carefully scoop out any solid particles floating in the cauldron, then let the brew sit until still. A thin film, almost ghostly layer, should form at the top of the liquid; scoop this layer up carefully and pour it into a bottle."
+            },
+            {
+              "body": "After a brew is put to glass and corked, it generally needs to go through the process of distillation. During this time the potion should sit still for a period of time usually defined in a potion's recipe. Drinking the potion before it has distilled generally doesn't work and can cause essence side effects to flare."
+            }
+          ]
+        },
+        {
+          "title": "Potion Balance",
+          "subtitle": "Why ratios are sacred.",
+          "sections": [
+            {
+              "body": "A potion is, in its base form, a mixture of essences in balance. This is an example of a Potion of Madness:"
+            },
+            {
+              "body": "A dram of mountain wormwood, ground (2 part bitter, 1 part flux); one silverin fish fin, dissolved in vinegar (1 part flux, 2 part Gild); the ash of a battlefield reed (1 part bitter, 1 part Strife, 1 part Death)."
+            },
+            {
+              "body": "This translates to: \"3 part Bitter, 2 part Gild, 1 part Strife, and 2 part Flux, plus 1 excess Death essence\". These essences in this specific balance will result in a stable Potion of Madness."
+            },
+            {
+              "body": "The balance of a potion is the most important thing for it to function. Most potions do, however, tolerate a small amount of excess essences without consequences. However, exceeding the tolerance will break the balance completely and the brew will fail."
+            },
+            {
+              "heading": "Off-Balance Potions"
+            },
+            {
+              "body": "Each essence has a role to play in the potion, such as duration, potency, and potentially side effects. It is possible to brew potions for specific effects by skewing their balance. If we use a balance such as \"2 part Bitter, 1 part Gild, 3 part Strife, and 2 part Flux\" for a Potion of Madness, it will increase its potency, making the affected creatures much more likely to attack their allies. This is due to the Strife essence being the ingredient affecting potency for this specific potion."
+            },
+            {
+              "body": "Likewise, reducing Flux in this recipe would increase the effect duration of the potion. Essences more often than not play similar roles in different potions \u2014 Flux generally affects duration \u2014 but this is not a hard rule and will trip up beginner alchemists at times. Some of the essences within a potion govern specific characteristics, and their effect on the brew varies: it varies whether increasing or decreasing a given essence will increase or decrease the specific characteristic. In a Potion of Madness, decreasing Flux increases its duration; this also sets a hard limit on how long its effects can actually last, as removing Flux completely would result in a failed brew."
+            },
+            {
+              "body": "Brewing off-balance brews can be very powerful; however, an off-balance potion will result in the brew becoming unstable, which enables any excess essence's side effects, potentially adding serious consequences to the usage of it."
+            },
+            {
+              "heading": "Essence Side Effects"
+            },
+            {
+              "body": "All essences have a side effect that can be triggered in the brewing process. For example, if Bitter is present as an excess essence during an off-balance brew, the final result will taste extremely bitter. This is a fairly mild side effect, but if there is excess Light essence it might cause some radiant damage upon ingesting the potion. The most interesting, however, are the Emergent essence side effects \u2014 an example of these would be bad luck for Gild, or even frailness from the Death essence. The general rule of thumb when attempting off-balance brewing is that Natural essence side-effects are sensory and thus a discomfort at worst, Strange are magical and can be dangerous, and Emergent essence side-effects are esoteric or narrative in nature."
+            },
+            {
+              "heading": "Potion Administration"
+            },
+            {
+              "body": "There are several methods of administering a brew. By far the most common method is to ingest it as a liquid from a bottle. However, there are other more specialized methods that can be utilized."
+            },
+            {
+              "term": "Powder Bomb",
+              "body": "Made by mixing the potion liquid into a flour and saw-dust slurry, then drying it at low temperature in the oven or in the sun until it forms a hardened ball. This will halve the potency and duration of the potion, but effectively turns the potion into an area-of-effect item, administering the brew through contact or inhalation of the powder cloud."
+            },
+            {
+              "term": "Injection",
+              "body": "Using a needle and press to inject the potion directly into the bloodstream. This method of administering can be done much faster than any other, but it comes with consequences: it can be toxic if the Desolance, Death, Acidic, Basic, or Aether essences are present in the brew. Any side effects are also doubled."
+            },
+            {
+              "term": "Pebetero",
+              "body": "Water mixed with the potion is gently heated with a candle to allow it to evaporate into the air. If done in an enclosed area no more than 40x40 ft in size, all in the room will get a very weak version of the potion's effect while in the room. Through pebetero a potion's side effects are too weak to take hold; this is a safe method of administering off-balance brews. Its main usage is to heighten concentration or awareness over a long period when in an enclosed space, for example during studies."
+            },
+            {
+              "term": "Salve",
+              "body": "The potion is thickened into a topical salve or paste to be applied to the skin. This will halve the brew's effects but results in a doubled duration. Excellent for effects such as enhanced luck or wakefulness."
+            }
+          ]
+        },
+        {
+          "title": "The Dangers of Alchemy",
+          "subtitle": "Discordance, dread, and dangerous ingredients.",
+          "sections": [
+            {
+              "body": "Dabbling in alchemical brewing without knowledge of the field can be very damning; there are combinations of essences that can have catastrophic consequences, some of which can even cause death simply from smelling them."
+            },
+            {
+              "term": "Discordance",
+              "body": "Is one of the main causes of alchemist deaths. Discordance is a phenomenon found only with the Emergent essences; these essences all come in opposite pairs:",
+              "list": [
+                "Life \u2014 Death",
+                "Reminiscence \u2014 Desolance",
+                "Bond \u2014 Gild",
+                "Itinerant \u2014 Fireside",
+                "Strife \u2014 Concord"
+              ]
+            },
+            {
+              "body": "These pairs, when present in the same brew, destructively interfere with each other in a process called discordance. At best, brewing with discordance only triggers all essence side effects possible within the brew."
+            },
+            {
+              "term": "Dangerous Ingredients",
+              "body": "Is also something to be wary of. Most importantly, any organic element from an intelligent creature, such as man but also things such as a dragon. These at all times result in potions out of balance and, more often than not, failed brews. But the main danger is that these ingredients trigger much stronger side effects of all kinds, so it is best to avoid them."
+            },
+            {
+              "body": "The second one to be wary of is unknown elements from Ancient Structures. These are so rare that the study of them is unusual enough already, but they are known to explode in narratively dangerous ways when brewing with them is attempted."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

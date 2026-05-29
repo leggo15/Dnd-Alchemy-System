@@ -1,0 +1,3925 @@
+:root {
+  --bg: #0e0b14;
+  --bg-2: #15111c;
+  --panel: #1c1727;
+  --panel-2: #241d33;
+  --border: #2f2742;
+  --ink: #e8e2f3;
+  --ink-dim: #b3a9c7;
+  --muted: #877ea0;
+  --accent: #b083ff;
+  --accent-2: #ff9a76;
+  --good: #6dd39a;
+  --warn: #f0c36d;
+  --bad: #ef6f7a;
+  --ok-bg: rgba(109, 211, 154, 0.12);
+  --warn-bg: rgba(240, 195, 109, 0.12);
+  --bad-bg: rgba(239, 111, 122, 0.12);
+  --shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+  --radius: 14px;
+  --radius-sm: 8px;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(176, 131, 255, 0.18), transparent 60%),
+    radial-gradient(1000px 500px at -10% 110%, rgba(255, 154, 118, 0.10), transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); }
+
+.topbar {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 220;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand h1 { margin: 0; font-size: 18px; letter-spacing: 0.4px; font-weight: 600; }
+.brand-glyph {
+  font-size: 22px;
+  filter: drop-shadow(0 0 8px rgba(176, 131, 255, 0.6));
+}
+
+.menu-toggle {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(17, 12, 23, 0.88);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: 21px;
+  line-height: 1;
+  box-shadow: var(--shadow);
+}
+.menu-toggle:hover {
+  border-color: var(--accent);
+}
+
+.tabs {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 170px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(14, 11, 20, 0.95);
+  box-shadow: var(--shadow);
+}
+.tabs.open { display: flex; }
+.tab {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  color: var(--ink-dim);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  transition: all 120ms ease;
+  text-align: left;
+}
+.tab:hover { color: var(--ink); background: rgba(255,255,255,0.04); }
+.tab.active { color: var(--ink); background: var(--panel); border-color: var(--border); box-shadow: var(--shadow); }
+
+main { flex: 1; padding: 16px 24px 24px; max-width: 1400px; width: 100%; margin: 0 auto; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.panel {
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -4px 0 12px;
+}
+.panel-head h2 { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: 0.3px; }
+
+.btn {
+  font: inherit; cursor: pointer; user-select: none;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--ink);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  transition: all 120ms ease;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary {
+  background: linear-gradient(135deg, var(--accent), #7c5bd2);
+  border-color: transparent;
+  color: white;
+  font-weight: 600;
+}
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; }
+.btn.ghost.danger { color: var(--bad); }
+.btn.ghost.danger:hover { border-color: var(--bad); }
+
+input[type="search"], input[type="number"] {
+  background: var(--bg-2);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font: inherit;
+}
+input[type="search"]:focus, input[type="number"]:focus {
+  outline: none; border-color: var(--accent);
+}
+
+.muted { color: var(--muted); font-size: 13px; }
+code { background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+.code {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  white-space: pre-wrap;
+  color: var(--ink-dim);
+}
+
+.hidden { display: none !important; }
+
+/* ---------- BREW STAGE: book on the left, cauldron on the right ---------- */
+.brew-stage {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(560px, 1.15fr) minmax(420px, 1fr);
+  align-items: start;
+}
+@media (max-width: 1100px) {
+  .brew-stage { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   THE TOME (left side)
+   ============================================================ */
+.book-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Let the column shrink inside the grid so width matches sibling tracks */
+  min-width: 0;
+  align-items: stretch;
+}
+
+.book-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.search-wrap {
+  position: relative;
+  flex: 1;
+}
+.search-wrap .search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); font-size: 16px; pointer-events: none;
+}
+.search-wrap input[type="search"] {
+  width: 100%;
+  padding-left: 32px;
+  font-size: 14px;
+}
+.cat-select { font-size: 13px; }
+
+/* The book itself */
+
+.book-spread {
+  display: grid;
+  grid-template-columns: 1fr 18px 1fr;
+  position: relative;
+  min-height: 440px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.book-page {
+  background:
+    radial-gradient(110% 80% at 50% 30%, #faecc7 0%, #ecd9ad 60%, #d8bf85 100%);
+  color: #3a2616;
+  padding: 18px 22px;
+  position: relative;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  line-height: 1.5;
+  overflow: hidden;
+  min-height: 440px;
+}
+.book-page.page-left  { border-radius: 4px 0 0 4px; box-shadow: inset -10px 0 18px rgba(0,0,0,0.18); }
+.book-page.page-right { border-radius: 0 4px 4px 0; box-shadow: inset  10px 0 18px rgba(0,0,0,0.18); }
+
+/* Subtle parchment texture: mottled spots and edge wear via radial gradients. */
+.book-page::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(2px 2px at 10% 18%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(2px 1px at 70% 30%, rgba(80,50,20,0.08), transparent 60%),
+    radial-gradient(2px 2px at 30% 70%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(1px 1px at 85% 85%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(2px 2px at 50% 50%, rgba(80,50,20,0.06), transparent 60%);
+  pointer-events: none;
+}
+.book-page::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 40px rgba(80,50,20,0.18);
+  border-radius: inherit;
+}
+
+.book-binding {
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.20) 50%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(180deg, #2a1a10, #1c1107);
+  border-left:  1px solid rgba(0,0,0,0.5);
+  border-right: 1px solid rgba(0,0,0,0.5);
+  position: relative; z-index: 2;
+}
+.book-binding::before, .book-binding::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 8px;
+  background: radial-gradient(ellipse, #c79046 0%, #6a3a14 70%, transparent 100%);
+}
+.book-binding::before { top: 12%; }
+.book-binding::after  { bottom: 12%; }
+
+/* Edge click zones — buttons in the book's left/right padding strips.
+   They sit OUTSIDE the page area so they never interfere with ingredient
+   card clicks. A faint chevron is always visible; hover brightens it. */
+.page-edge {
+  position: absolute;
+  top: 14px; bottom: 14px;
+  width: 32px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  color: rgba(220,180,100,0.35);
+  font-size: 28px;
+  transition: color 200ms ease, background 200ms ease, transform 200ms ease;
+  border-radius: 4px;
+}
+.page-edge-prev { left: 0; }
+.page-edge-next { right: 0; }
+.page-edge:hover {
+  color: rgba(245,210,140,0.95);
+  background: rgba(255,210,140,0.08);
+}
+.page-edge:active {
+  transform: scale(0.96);
+}
+.page-edge:disabled {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.15;
+}
+.edge-arrow {
+  font-weight: 700;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,0.5),
+    0 0 8px rgba(255,210,140,0.4);
+  pointer-events: none;
+  transition: transform 200ms ease;
+  line-height: 1;
+}
+.page-edge-prev:hover .edge-arrow { transform: translateX(-2px); }
+.page-edge-next:hover .edge-arrow { transform: translateX(2px); }
+
+/* Page flip animation: lifts and rotates the appropriate page,
+   with a moving shadow under it for depth. */
+.book-spread .page-left,
+.book-spread .page-right {
+  transition: transform 250ms ease-in-out, filter 250ms ease;
+  transform-origin: var(--flip-origin, center);
+  will-change: transform, filter;
+}
+.book-spread.flipping-forward .page-right {
+  --flip-origin: left center;
+  transform: rotateY(-25deg);
+  filter: brightness(0.85);
+  z-index: 5;
+  position: relative;
+}
+.book-spread.flipping-forward .page-left {
+  filter: brightness(0.95);
+}
+.book-spread.flipping-back .page-left {
+  --flip-origin: right center;
+  transform: rotateY(25deg);
+  filter: brightness(0.85);
+  z-index: 5;
+  position: relative;
+}
+.book-spread.flipping-back .page-right {
+  filter: brightness(0.95);
+}
+
+/* Page navigation */
+.book-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+.book-btn {
+  font-size: 18px;
+  width: 42px;
+  height: 38px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.page-indicator {
+  font-size: 13px;
+  color: var(--ink-dim);
+  letter-spacing: 0.04em;
+  min-width: 160px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ========= Page content styling ========= */
+.page-title {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2a1808;
+  letter-spacing: 0.4px;
+  text-shadow: 0 1px 0 rgba(255,235,200,0.5);
+  border-bottom: 2px solid rgba(80,50,20,0.25);
+  padding-bottom: 4px;
+}
+.page-subtitle {
+  font-style: italic;
+  font-size: 12px;
+  color: #5a3a1a;
+  margin: 0 0 10px;
+}
+.page-folio {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: rgba(80,50,20,0.5);
+  letter-spacing: 0.2em;
+  font-variant-numeric: tabular-nums;
+}
+.page-section { margin-bottom: 10px; }
+.page-section h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  color: #4a2c10;
+  border-bottom: 1px dashed rgba(80,50,20,0.35);
+  padding-bottom: 2px;
+}
+.page-section p, .page-section li {
+  font-size: 13px;
+  color: #3a2616;
+  margin: 3px 0;
+}
+.page-section ol { padding-left: 20px; margin: 4px 0; }
+.page-section ul { padding-left: 20px; margin: 4px 0; }
+.page-section strong { color: #2a1808; }
+.page-section em { color: #5a3010; }
+
+/* Ingredient cards on the page (3 per page) */
+.tome-ingredient-list {
+  display: grid;
+  gap: 10px;
+}
+.tome-ingredient {
+  font: inherit;
+  color: #2a1808;
+  text-align: left;
+  background:
+    linear-gradient(180deg, rgba(255,250,235,0.5), rgba(220,195,150,0.25));
+  border: 1px solid rgba(80,50,20,0.30);
+  border-radius: 6px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  display: flex; flex-direction: column; gap: 4px;
+  box-shadow: 0 1px 0 rgba(255,250,235,0.5) inset, 0 2px 4px rgba(80,50,20,0.10);
+  position: relative;
+  font-family: inherit;
+}
+.tome-ingredient:hover {
+  border-color: #5a3010;
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(255,250,235,0.8) inset, 0 4px 10px rgba(80,50,20,0.25);
+}
+.tome-ingredient .row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+}
+.tome-ingredient .ing-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: #2a1808;
+  letter-spacing: 0.2px;
+}
+.tome-ingredient .ing-rarity {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(80,50,20,0.6);
+  font-style: italic;
+}
+.tome-ingredient .ing-rarity.r-uncommon  { color: #2c6f4a; }
+.tome-ingredient .ing-rarity.r-rare      { color: #2c5680; }
+.tome-ingredient .ing-rarity.r-very_rare { color: #5a2c80; }
+.tome-ingredient .ing-rarity.r-legendary { color: #8a4a14; }
+.tome-ingredient .ing-desc {
+  font-size: 12px;
+  color: #4a2c10;
+  font-style: italic;
+  line-height: 1.4;
+}
+.tome-ingredient .ing-chips {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  margin-top: 2px;
+}
+
+/* Override generic chip on parchment so they're readable */
+.tome-ingredient .chip {
+  font-size: 10px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+  background: rgba(80,50,20,0.10);
+  color: #3a2616;
+  border-color: rgba(80,50,20,0.25);
+}
+.tome-ingredient .chip.essence {
+  /* Essence chips already have color via inline style; just darken text contrast */
+  filter: brightness(0.8) saturate(1.3);
+}
+.tome-ingredient .chip.trait {
+  background: rgba(170,80,30,0.15);
+  color: #7a3a14;
+  border-color: rgba(170,80,30,0.35);
+}
+
+/* Disabled at cap */
+#book.at-cap .tome-ingredient,
+#book.at-cap .tome-entry {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+#book.at-cap .tome-ingredient:hover {
+  transform: none;
+  border-color: rgba(80,50,20,0.30);
+  box-shadow: 0 1px 0 rgba(255,250,235,0.5) inset, 0 2px 4px rgba(80,50,20,0.10);
+}
+#book.at-cap .tome-entry:hover {
+  background: transparent;
+}
+#book.at-cap .tome-entry:hover .entry-name {
+  text-shadow: none;
+  color: var(--ink);
+}
+
+/* Search no-match notice on page */
+.tome-empty {
+  color: #5a3010;
+  font-style: italic;
+  text-align: center;
+  padding: 40px 12px;
+}
+
+/* Cover page styling */
+.book-cover {
+  text-align: center;
+  padding-top: 36px;
+}
+.book-cover .glyph {
+  font-size: 56px;
+  display: block;
+  margin: 0 0 12px;
+  filter: drop-shadow(0 2px 0 rgba(255,235,200,0.5)) drop-shadow(0 4px 10px rgba(80,50,20,0.4));
+}
+.book-cover h1 {
+  font-size: 28px;
+  margin: 0 0 6px;
+  color: #2a1808;
+  letter-spacing: 0.05em;
+}
+.book-cover .by-line {
+  font-style: italic;
+  color: #5a3010;
+  margin: 0 0 20px;
+  font-size: 12px;
+}
+.book-cover .credit {
+  position: absolute;
+  bottom: 24px;
+  left: 0; right: 0;
+  font-size: 11px;
+  color: rgba(80,50,20,0.55);
+  font-style: italic;
+}
+
+/* Essence & trait list on intro pages */
+.essence-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px 12px;
+}
+.essence-row, .trait-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 12px;
+}
+.essence-row .swatch {
+  width: 11px; height: 11px; border-radius: 3px;
+  border: 1px solid rgba(80,50,20,0.4);
+  flex-shrink: 0;
+  display: inline-block;
+}
+.essence-row .e-name { font-weight: 700; color: #2a1808; }
+.essence-row .e-desc { color: #4a2c10; }
+.trait-row .star { color: #8a4a14; font-weight: 700; }
+.trait-row .t-name { font-weight: 700; color: #2a1808; }
+.trait-row .t-desc { color: #4a2c10; font-size: 12px; }
+
+.tier-row {
+  display: flex; align-items: center; gap: 10px;
+  margin: 4px 0;
+  font-size: 13px;
+  color: #3a2616;
+}
+.tier-row .tier-pill {
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 999px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  flex-shrink: 0;
+}
+.tier-pill.tier-lesser   { background: #cfeaf2; color: #1f5a72; border: 1px solid #88c0d4; }
+.tier-pill.tier-standard { background: #e1d4f4; color: #4a2c80; border: 1px solid #b08aef; }
+.tier-pill.tier-greater  { background: #f4d8c4; color: #8a3a10; border: 1px solid #df9468; }
+.tier-pill.tier-superior { background: #f4e6b4; color: #6a4a10; border: 1px solid #d4b04c; }
+
+.antagonist-list {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  margin-top: 4px;
+}
+.antagonist-pair {
+  font-size: 11px;
+  background: rgba(80,50,20,0.10);
+  border: 1px solid rgba(80,50,20,0.25);
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: #3a2616;
+}
+
+.tag-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+}
+.chip.essence { color: var(--ink); border-color: transparent; }
+.chip.trait {
+  color: var(--accent-2);
+  background: rgba(255, 154, 118, 0.10);
+  border-color: rgba(255, 154, 118, 0.30);
+  font-weight: 600;
+}
+.chip.center {
+  color: var(--accent);
+  background: rgba(176, 131, 255, 0.10);
+  border-color: rgba(176, 131, 255, 0.35);
+  font-weight: 600;
+}
+
+.tier-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-left: 8px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.tier-badge.tier-lesser   { background: rgba(122,215,240,0.18); color: #7ad7f0; border: 1px solid rgba(122,215,240,0.4); }
+.tier-badge.tier-standard { background: rgba(176,131,255,0.18); color: var(--accent); border: 1px solid rgba(176,131,255,0.4); }
+.tier-badge.tier-greater  { background: rgba(255,154,118,0.18); color: var(--accent-2); border: 1px solid rgba(255,154,118,0.4); }
+.tier-badge.tier-superior { background: rgba(240,195,109,0.20); color: var(--warn); border: 1px solid rgba(240,195,109,0.5); }
+
+.tier-header {
+  list-style: none;
+  margin: 18px 0 8px;
+  padding: 8px 0 4px;
+  border-bottom: 1px solid var(--border);
+}
+.tier-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.hint {
+  background: rgba(240,195,109,0.10);
+  color: var(--warn);
+  border-left: 3px solid var(--warn);
+  padding: 8px 12px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-top: 10px;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.parts-counter {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  background: rgba(176,131,255,0.15);
+  color: var(--accent);
+  border: 1px solid rgba(176,131,255,0.35);
+  vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+}
+.parts-counter.near-cap {
+  background: rgba(240,195,109,0.18);
+  color: var(--warn);
+  border-color: rgba(240,195,109,0.4);
+}
+.parts-counter.at-cap {
+  background: rgba(239,111,122,0.20);
+  color: var(--bad);
+  border-color: rgba(239,111,122,0.5);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,111,122,0.4); }
+  50%      { box-shadow: 0 0 0 6px rgba(239,111,122,0); }
+}
+
+.cap-notice {
+  background: rgba(239,111,122,0.10);
+  color: var(--bad);
+  border: 1px solid rgba(239,111,122,0.30);
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.parts-control button:disabled,
+.parts-control button[disabled] {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Rarity colors (used in journal/DM) */
+.ingredient-rarity.rarity-common    { color: var(--ink-dim); }
+.ingredient-rarity.rarity-uncommon  { color: #6dd39a; border-color: rgba(109,211,154,0.4); }
+.ingredient-rarity.rarity-rare      { color: #7ad7f0; border-color: rgba(122,215,240,0.4); }
+.ingredient-rarity.rarity-very_rare { color: var(--accent); border-color: rgba(176,131,255,0.5); }
+.ingredient-rarity.rarity-legendary { color: var(--accent-2); border-color: rgba(255,154,118,0.5); }
+select {
+  background: var(--bg-2);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font: inherit;
+}
+select:focus { outline: none; border-color: var(--accent); }
+
+.totals-block .val-row.dominant .lbl,
+.totals-block .val-row.dominant .val {
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
+.note {
+  background: rgba(176, 131, 255, 0.10);
+  color: var(--accent);
+  padding: 6px 10px; border-radius: var(--radius-sm); font-size: 13px; margin-top: 4px;
+}
+
+.rider-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  display: grid;
+  gap: 4px;
+}
+.rider-list li {
+  position: relative;
+  padding: 4px 8px 4px 22px;
+  font-size: 13px;
+  color: var(--ink-dim);
+  border-left: 2px solid var(--accent);
+  background: rgba(176, 131, 255, 0.06);
+  border-radius: 0 4px 4px 0;
+}
+.rider-list li::before {
+  content: "•";
+  position: absolute;
+  left: 9px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.rider-list.compact li {
+  padding: 2px 8px 2px 18px;
+  font-size: 12px;
+  border-left-width: 1px;
+  background: transparent;
+}
+.rider-list.compact li::before { left: 6px; }
+
+.duration-ladder {
+  list-style: none; padding: 0; margin: 0; display: grid;
+  grid-template-columns: repeat(2, 1fr); gap: 4px 12px;
+  font-size: 13px; color: var(--ink-dim);
+}
+.duration-ladder li code {
+  display: inline-block; min-width: 64px; text-align: right; margin-right: 8px;
+}
+
+/* ============================================================
+   BREW STAGE RIGHT: cauldron + contents (potion docks above the rim)
+   ============================================================ */
+.brew-stage-right {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* ---------- Floating potion (anchored above the cauldron rim) ---------- */
+.potion-display {
+  position: absolute;
+  /* Cauldron rim sits at y=118px from top of cauldron-visual. We want the
+     bottle bottom to rest a hair above the rim, with a glowing aura around it. */
+  top: 8px;
+  left: 50%;
+  width: 130px;
+  height: 110px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px) scale(0.8);
+  transition: opacity 600ms ease, transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  z-index: 10;
+  cursor: pointer;
+  outline: none;
+}
+.potion-display.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+  pointer-events: auto;
+}
+.potion-display.visible:hover .potion-bottle,
+.potion-display.visible:focus-visible .potion-bottle {
+  filter: brightness(1.15);
+}
+.potion-display.visible:hover .potion-glow,
+.potion-display.visible:focus-visible .potion-glow {
+  opacity: 0.95;
+  transform: scale(1.25);
+}
+/* Hide the inline label — the popup carries the potion name now. */
+.potion-label { display: none; }
+.potion-shelf {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130px;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, rgba(176,131,255,0.4), transparent);
+  border-radius: 999px;
+  filter: blur(2px);
+}
+.potion-bottle {
+  --potion-color: #b083ff;
+  position: relative;
+  width: 56px;
+  height: 110px;
+  animation: bob 3.5s ease-in-out infinite;
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.potion-glow {
+  position: absolute;
+  inset: -16px;
+  background: radial-gradient(circle, var(--potion-color) 0%, transparent 60%);
+  opacity: 0.5;
+  filter: blur(8px);
+  animation: glow-pulse 2.5s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: 50%;
+}
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%      { opacity: 0.7; transform: scale(1.15); }
+}
+.potion-cap {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 22px; height: 8px;
+  background: linear-gradient(180deg, #6a4a20, #3a2a10);
+  border-radius: 3px 3px 1px 1px;
+  border: 1px solid rgba(0,0,0,0.4);
+}
+.potion-neck {
+  position: absolute;
+  top: 8px; left: 50%;
+  transform: translateX(-50%);
+  width: 16px; height: 16px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.10), rgba(255,255,255,0.25), rgba(255,255,255,0.10));
+  border-left: 1px solid rgba(255,255,255,0.30);
+  border-right: 1px solid rgba(0,0,0,0.20);
+}
+.potion-body {
+  position: absolute;
+  top: 22px; left: 0;
+  width: 56px; height: 88px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.10), rgba(255,255,255,0.25), rgba(255,255,255,0.05));
+  border-radius: 28px 28px 18px 18px / 22px 22px 22px 22px;
+  border: 1px solid rgba(255,255,255,0.20);
+  border-top: 1px solid rgba(0,0,0,0.20);
+  overflow: hidden;
+  box-shadow: inset -6px 0 8px rgba(0,0,0,0.20);
+}
+.potion-liquid {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 70%;
+  background: linear-gradient(180deg, var(--potion-color) 0%, color-mix(in srgb, var(--potion-color) 70%, #000 30%) 100%);
+  border-radius: 0 0 18px 18px;
+  box-shadow:
+    inset 0 4px 6px rgba(255,255,255,0.25),
+    inset 0 -8px 8px rgba(0,0,0,0.30);
+}
+.potion-liquid::before {
+  content: "";
+  position: absolute;
+  top: -3px; left: 0; right: 0;
+  height: 6px;
+  background:
+    radial-gradient(circle 4px at 20% 50%, var(--potion-color) 50%, transparent 50%),
+    radial-gradient(circle 4px at 50% 50%, var(--potion-color) 50%, transparent 50%),
+    radial-gradient(circle 4px at 80% 50%, var(--potion-color) 50%, transparent 50%);
+  animation: liquid-wobble 4s ease-in-out infinite;
+}
+@keyframes liquid-wobble {
+  0%, 100% { transform: translateX(-2px); }
+  50%      { transform: translateX(2px); }
+}
+.potion-shine {
+  position: absolute;
+  top: 6px; left: 6px;
+  width: 12px; height: 30px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.55), transparent);
+  border-radius: 50%;
+  filter: blur(1px);
+  pointer-events: none;
+}
+.potion-bubbles {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 70%;
+  pointer-events: none;
+}
+.potion-bubbles span {
+  position: absolute;
+  bottom: 8px;
+  width: 4px; height: 4px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 50%;
+  animation: rise-bubble 3s linear infinite;
+}
+.potion-bubbles span:nth-child(1) { left: 18%; animation-delay: 0s;   }
+.potion-bubbles span:nth-child(2) { left: 50%; animation-delay: 1s;   }
+.potion-bubbles span:nth-child(3) { left: 75%; animation-delay: 2s; width: 3px; height: 3px; }
+@keyframes rise-bubble {
+  0%   { transform: translateY(0)    scale(0.8); opacity: 0;   }
+  20%  {                                          opacity: 0.8; }
+  100% { transform: translateY(-50px) scale(1.1); opacity: 0;   }
+}
+
+.potion-label {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  text-shadow: 0 0 8px rgba(0,0,0,0.6);
+}
+
+/* ---------- Cauldron + contents row ---------- */
+.cauldron-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 18px;
+  width: 100%;
+  align-items: start;
+}
+@media (max-width: 1100px) {
+  .cauldron-row { grid-template-columns: 200px 1fr; }
+}
+@media (max-width: 600px) {
+  .cauldron-row { grid-template-columns: 1fr; justify-items: center; }
+}
+
+/* ---------- Cauldron visualization ---------- */
+.cauldron-visual {
+  position: relative;
+  width: 220px;
+  height: 280px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.steam-column {
+  position: absolute;
+  left: 50%;
+  bottom: 130px;
+  width: 100px;
+  height: 200px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.steam {
+  position: absolute;
+  bottom: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(220,220,255,0.55) 0%, rgba(220,220,255,0) 65%);
+  filter: blur(3px);
+  opacity: 0;
+  animation: steam-rise 4.5s ease-in infinite;
+}
+.steam.s1 { left: 10%; animation-delay: 0s;    }
+.steam.s2 { left: 35%; animation-delay: 1.1s; width: 22px; height: 22px; }
+.steam.s3 { left: 60%; animation-delay: 2.3s; width: 30px; height: 30px; }
+.steam.s4 { left: 80%; animation-delay: 3.5s; }
+@keyframes steam-rise {
+  0%   { transform: translateY(0)    scale(0.6); opacity: 0;   }
+  15%  {                                           opacity: 0.7; }
+  100% { transform: translateY(-180px) scale(1.4); opacity: 0;   }
+}
+
+.cauldron-shape {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+/* The mouth (top opening with brew) */
+.cauldron-rim {
+  position: absolute;
+  top: 38px; left: 50%;
+  transform: translateX(-50%);
+  width: 180px; height: 14px;
+  background: linear-gradient(180deg, #2a2230, #15101c 70%, #0a0810);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 -3px 4px rgba(0,0,0,0.7),
+    0 2px 6px rgba(0,0,0,0.5);
+  z-index: 4;
+}
+.cauldron-mouth {
+  position: absolute;
+  top: 42px; left: 50%;
+  transform: translateX(-50%);
+  width: 168px; height: 28px;
+  border-radius: 50%;
+  background: #06030a;
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.9);
+  overflow: hidden;
+  z-index: 3;
+}
+.brew-liquid {
+  --brew-color: #6a4f9a;
+  position: absolute;
+  top: 4px; left: 8px; right: 8px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 30%, color-mix(in srgb, var(--brew-color) 80%, white 20%) 0%, var(--brew-color) 60%, color-mix(in srgb, var(--brew-color) 70%, black 30%) 100%);
+  box-shadow:
+    inset 0 -4px 8px rgba(0,0,0,0.4),
+    0 0 16px var(--brew-color);
+  transition: background 600ms ease, box-shadow 600ms ease;
+  animation: brew-shimmer 3s ease-in-out infinite;
+}
+@keyframes brew-shimmer {
+  0%, 100% { filter: brightness(1)    saturate(1);    }
+  50%      { filter: brightness(1.15) saturate(1.25); }
+}
+.brew-shine {
+  position: absolute;
+  top: 6px; left: 30%;
+  width: 40px; height: 6px;
+  background: rgba(255,255,255,0.35);
+  border-radius: 50%;
+  filter: blur(2px);
+  z-index: 5;
+  pointer-events: none;
+}
+.brew-bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+.brew-bubbles .bubble {
+  position: absolute;
+  bottom: 4px;
+  width: 5px; height: 5px;
+  background: radial-gradient(circle, rgba(255,255,255,0.6) 30%, rgba(255,255,255,0.1) 70%);
+  border-radius: 50%;
+  animation: cauldron-bubble 2.5s ease-in infinite;
+  opacity: 0;
+}
+@keyframes cauldron-bubble {
+  0%   { transform: translateY(0)   scale(0.4); opacity: 0;   }
+  20%  {                                           opacity: 0.9; }
+  80%  {                                           opacity: 0.6; }
+  100% { transform: translateY(-22px) scale(1.2); opacity: 0;   }
+}
+.cauldron-visual.brewing .brew-bubbles .bubble { animation-duration: 1.2s; }
+.cauldron-visual.brewing .brew-liquid { animation-duration: 1s; }
+
+/* The belly */
+.cauldron-belly {
+  position: absolute;
+  top: 50px; left: 50%;
+  transform: translateX(-50%);
+  width: 196px; height: 130px;
+  background:
+    radial-gradient(ellipse at 35% 30%, #4a3a55 0%, #2a2030 40%, #15101c 75%, #0a0810 100%);
+  border-radius: 0 0 50% 50% / 0 0 70% 70%;
+  box-shadow:
+    inset -10px -8px 24px rgba(0,0,0,0.7),
+    inset 8px 4px 12px rgba(176,131,255,0.10),
+    0 12px 24px rgba(0,0,0,0.55);
+  z-index: 2;
+  border: 1px solid rgba(0,0,0,0.6);
+  border-top: none;
+}
+.cauldron-highlight {
+  position: absolute;
+  top: 12%; left: 18%;
+  width: 30%; height: 30%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.12), transparent 60%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.cauldron-handle {
+  position: absolute;
+  top: 14px;
+  width: 22px; height: 28px;
+  border: 4px solid #1a1420;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4);
+}
+.cauldron-handle.left  { left: -16px;  border-right-color: transparent; transform: rotate(-12deg); }
+.cauldron-handle.right { right: -16px; border-left-color: transparent;  transform: rotate(12deg);  }
+
+.cauldron-feet {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 1;
+}
+.cauldron-feet span {
+  width: 18px; height: 14px;
+  background: linear-gradient(180deg, #2a2230, #0a0810);
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+}
+
+/* Fire under the cauldron */
+.cauldron-fire {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 40px;
+  pointer-events: none;
+}
+.ember-glow {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 130px; height: 24px;
+  background: radial-gradient(ellipse, rgba(255,140,40,0.55) 0%, rgba(255,90,20,0.20) 50%, transparent 75%);
+  filter: blur(4px);
+  animation: ember-pulse 2.2s ease-in-out infinite;
+}
+@keyframes ember-pulse {
+  0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1);    }
+  50%      { opacity: 0.9; transform: translateX(-50%) scale(1.08); }
+}
+.flame {
+  position: absolute;
+  bottom: 4px;
+  width: 14px; height: 28px;
+  background: linear-gradient(0deg, #ffae40 0%, #ff6020 50%, #ff3010 100%);
+  border-radius: 50% 50% 30% 30% / 60% 60% 40% 40%;
+  filter: blur(0.4px);
+  animation: flicker 1.4s ease-in-out infinite;
+  transform-origin: 50% 100%;
+  box-shadow: 0 0 12px rgba(255,140,60,0.6);
+}
+.flame.f1 { left: 12%; animation-delay: 0s;    height: 24px; }
+.flame.f2 { left: 30%; animation-delay: 0.3s;  height: 32px; }
+.flame.f3 { left: 50%; animation-delay: 0.6s;  height: 36px; transform: translateX(-50%); }
+.flame.f4 { left: 65%; animation-delay: 0.9s;  height: 28px; }
+.flame.f5 { left: 82%; animation-delay: 1.1s;  height: 22px; }
+@keyframes flicker {
+  0%, 100% { transform: scaleY(1)    scaleX(1)    skewX(-2deg); opacity: 0.95; }
+  50%      { transform: scaleY(1.15) scaleX(0.85) skewX(3deg);  opacity: 1;    }
+}
+.flame.f3 { transform: translateX(-50%); }
+
+/* Brewing pulse — short-lived class added on Brew button */
+.cauldron-visual.brewing .ember-glow { animation-duration: 0.8s; }
+.cauldron-visual.brewing .brew-liquid {
+  box-shadow: inset 0 -4px 8px rgba(0,0,0,0.4), 0 0 30px var(--brew-color);
+}
+.cauldron-visual.brewing .flame { animation-duration: 0.5s; }
+
+/* ---------- Cauldron contents (small panel) ---------- */
+.cauldron-contents {
+  padding: 14px;
+  font-size: 13px;
+}
+.cauldron-contents .panel-head.compact {
+  margin: 0 0 10px;
+}
+.cauldron-contents .panel-head h2 {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cauldron-empty {
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px 12px;
+  text-align: center;
+  font-size: 12px;
+  font-style: italic;
+}
+.cauldron-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+  display: grid;
+  gap: 6px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.cauldron-line {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-size: 12px;
+}
+.cauldron-line .name { font-weight: 600; font-size: 12px; line-height: 1.2; }
+.cauldron-line .sub  { display: none; } /* keep contents tight */
+.parts-control {
+  display: inline-flex; align-items: center; gap: 2px;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 999px;
+  padding: 1px 3px;
+}
+.parts-control button {
+  background: transparent; border: none; color: var(--ink); width: 20px; height: 20px;
+  border-radius: 999px; cursor: pointer; font-size: 13px; line-height: 1;
+}
+.parts-control button:hover { background: rgba(255,255,255,0.08); }
+.parts-control .val { min-width: 18px; text-align: center; font-variant-numeric: tabular-nums; font-size: 12px; }
+.remove-btn {
+  background: transparent; color: var(--bad); border: none; cursor: pointer; font-size: 16px; padding: 0 4px; line-height: 1;
+}
+.cauldron-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.cauldron-actions .btn {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.cauldron-totals {
+  display: grid; grid-template-columns: 1fr; gap: 6px;
+  margin-bottom: 10px;
+}
+.totals-block {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 11px;
+}
+.totals-block h4 { margin: 0 0 4px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; }
+.totals-block .val-row { display: flex; justify-content: space-between; font-size: 11px; padding: 1px 0; }
+.totals-block .val { font-variant-numeric: tabular-nums; color: var(--ink); }
+.totals-block .lbl { color: var(--ink-dim); display: flex; align-items: center; gap: 4px; }
+
+/* ---------- Centered result popup ---------- */
+.result-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(20,15,30,0.55) 0%, rgba(10,5,15,0.75) 100%);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 90;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+.result-popup-backdrop.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.result-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+  width: calc(100% - 40px);
+  max-width: 620px;
+  max-height: min(85vh, 800px);
+  overflow-y: auto;
+  background:
+    radial-gradient(115% 85% at 50% 25%, #faecc7 0%, #ecd9ad 60%, #d8bf85 100%);
+  color: #3a2616;
+  padding: 28px 32px;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  border-radius: 14px;
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.65),
+    0 4px 16px rgba(0,0,0,0.45),
+    inset 0 0 40px rgba(80,50,20,0.18),
+    inset 0 0 0 1px rgba(80,50,20,0.30);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -45%) scale(0.92);
+  transition: opacity 220ms ease, transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.result-popup.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Same parchment-spot texture as the book pages, scaled up. */
+.result-popup::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(2px 2px at 12% 18%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(2px 1px at 72% 28%, rgba(80,50,20,0.08), transparent 60%),
+    radial-gradient(2px 2px at 28% 72%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(1px 1px at 86% 86%, rgba(80,50,20,0.10), transparent 60%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.result-popup-close {
+  position: absolute;
+  top: 10px; right: 12px;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(80,50,20,0.35);
+  background: rgba(255,250,235,0.6);
+  color: #5a3010;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  transition: all 150ms ease;
+  z-index: 1;
+}
+.result-popup-close:hover {
+  background: rgba(80,50,20,0.10);
+  color: #2a1808;
+  border-color: rgba(80,50,20,0.6);
+}
+
+/* ---------- Result card (inside popup) ---------- */
+.result-card {
+  display: flex; flex-direction: column; gap: 12px;
+  color: #3a2616;
+}
+.result-card .title-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap;
+}
+.result-card .title {
+  font-size: 24px; font-weight: 700; letter-spacing: 0.3px;
+  color: #2a1808;
+}
+.result-card .verdict {
+  text-transform: uppercase; font-size: 11px; letter-spacing: 0.8px;
+  padding: 4px 10px; border-radius: 999px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.verdict.success { background: rgba(60,140,80,0.15); color: #2c6f4a; border: 1px solid rgba(60,140,80,0.4); }
+.verdict.partial { background: rgba(180,140,40,0.15); color: #7a5a14; border: 1px solid rgba(180,140,40,0.4); }
+.verdict.failure { background: rgba(180,60,60,0.15); color: #7a2c2c; border: 1px solid rgba(180,60,60,0.4); }
+
+.result-card .narrative {
+  color: #4a2c10;
+  line-height: 1.55;
+  font-style: italic;
+  font-size: 14px;
+}
+.effect-block {
+  background: rgba(255,250,235,0.4);
+  border: 1px solid rgba(80,50,20,0.30);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+.effect-line { font-size: 16px; }
+.effect-meta {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  color: #5a3a1a;
+  font-size: 13px;
+  margin-top: 6px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.side-effects { margin-top: 8px; }
+.side-effect {
+  background: rgba(180,60,60,0.12); color: #7a2c2c;
+  padding: 6px 10px; border-radius: var(--radius-sm); font-size: 13px; margin-top: 4px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.surge {
+  background: rgba(180,140,40,0.15); color: #7a5a14;
+  padding: 6px 10px; border-radius: var(--radius-sm); font-size: 13px; margin-top: 4px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.note {
+  background: rgba(120,80,180,0.10); color: #5a2c80;
+  padding: 6px 10px; border-radius: var(--radius-sm); font-size: 13px; margin-top: 4px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.result-card .hint {
+  background: rgba(180,140,40,0.10);
+  color: #7a5a14;
+  border-left: 3px solid #7a5a14;
+}
+.result-card .rider-list li {
+  background: rgba(120,80,180,0.06);
+  color: #4a2c10;
+  border-left-color: #7a5a90;
+}
+.result-card .rider-list li::before { color: #7a5a90; }
+
+/* Tier badge inside result needs lighter parchment-friendly variant */
+.result-card .tier-badge.tier-lesser   { background: #cfeaf2; color: #1f5a72; border-color: #88c0d4; }
+.result-card .tier-badge.tier-standard { background: #e1d4f4; color: #4a2c80; border-color: #b08aef; }
+.result-card .tier-badge.tier-greater  { background: #f4d8c4; color: #8a3a10; border-color: #df9468; }
+.result-card .tier-badge.tier-superior { background: #f4e6b4; color: #6a4a10; border-color: #d4b04c; }
+.result-card .tier-badge { border: 1px solid; }
+
+/* Journal */
+.journal-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.journal-entry {
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px;
+  display: grid; gap: 6px;
+}
+.journal-entry .row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.journal-entry .ts { color: var(--muted); font-size: 12px; }
+.journal-entry .recipe-line { font-weight: 600; }
+.journal-entry .ingredients-line { color: var(--ink-dim); font-size: 13px; }
+
+/* DM */
+.dm-grid { display: grid; gap: 18px; grid-template-columns: 1.4fr 1fr; }
+@media (max-width: 900px) { .dm-grid { grid-template-columns: 1fr; } }
+.recipe-list, .tag-legend { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.recipe-card {
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px;
+}
+.recipe-card h4 { margin: 0 0 4px; }
+.recipe-card .meta { color: var(--ink-dim); font-size: 13px; }
+.recipe-card pre { margin: 6px 0 0; }
+
+.tag-legend li {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px;
+}
+.tag-swatch {
+  width: 14px; height: 14px; border-radius: 4px; display: inline-block; margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ============================================================================
+   THE ALCHEMIST'S WORKBENCH — Immersive Brew page overhaul
+   ----------------------------------------------------------------------------
+   Everything in this block is scoped to #tab-brew so the Journal and DM tabs
+   remain in the original "modern UI" theme. The goal is to make the Brew
+   page feel like a real candle-lit alchemist's table: dark wood, leather
+   inlay, parchment recipe card, brass-plated brew button, hand-inked notes.
+   ============================================================================ */
+
+/* ---------- Variables for the workbench palette ---------- */
+:root {
+  --wood-dark:    #160b04;
+  --wood-mid:     #2c1a0d;
+  --wood-light:   #4a2c14;
+  --leather:      #3a1f0e;
+  --leather-edge: #1c0f06;
+  /* The book/cover uses its own dark-grayish-green leather palette so it
+     reads as a separate object on the brown workbench surface.  --cover
+     is the lit face, --cover-edge the deep shadow, --cover-rim the warm
+     micro-highlight along stitching/seams. */
+  --cover:        #2f4035;
+  --cover-edge:   #14201a;
+  --cover-rim:    #6c8073;
+  --brass:        #b88a4a;
+  --brass-hi:     #f1cf83;
+  --brass-lo:     #5a3a14;
+  --parchment-1:  #f7e8c1;
+  --parchment-2:  #ead4a3;
+  --parchment-3:  #d2b376;
+  --ink:          #2a1808;
+  --ink-mid:      #4a2c10;
+  --ink-soft:     #6a4220;
+  --ink-faded:    rgba(80, 50, 20, 0.55);
+  --rule-line:    rgba(80, 50, 20, 0.18);
+  --wax-red:      #8a2c2c;
+  --wax-red-hi:   #c64c4c;
+  --candle:       rgba(255, 200, 120, 0.55);
+  --serif:        "IM Fell English", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --serif-sc:     "IM Fell English SC", "IM Fell English", Georgia, serif;
+  --hand:         "Caveat", "Iowan Old Style", "Brush Script MT", cursive;
+  --display:      "Cinzel", "Cormorant Garamond", "Trajan Pro", Georgia, serif;
+}
+
+/* ---------- The workbench surface ---------- */
+#tab-brew {
+  position: relative;
+}
+.workbench {
+  position: relative;
+  padding: 28px 30px 36px;
+  border-radius: 12px;
+  /* Layered wood grain + warm candlelight + ambient vignette */
+  background:
+    /* candle halo from upper-right */
+    radial-gradient(ellipse 700px 460px at 92% -4%, rgba(255, 198, 120, 0.20), transparent 65%),
+    /* secondary ember glow from lower-left (cauldron fire bleed) */
+    radial-gradient(ellipse 520px 320px at 8% 105%, rgba(255, 130, 50, 0.10), transparent 70%),
+    /* corner vignette */
+    radial-gradient(ellipse 100% 100% at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 100%),
+    /* fine vertical wood grain stripes */
+    repeating-linear-gradient(
+      90deg,
+      rgba(0,0,0,0)        0,
+      rgba(0,0,0,0)        37px,
+      rgba(0,0,0,0.10)     37px,
+      rgba(0,0,0,0.10)     38px,
+      rgba(0,0,0,0)        38px,
+      rgba(0,0,0,0)        86px,
+      rgba(120,70,30,0.05) 86px,
+      rgba(120,70,30,0.05) 87px
+    ),
+    /* subtle horizontal wood-knot ripple */
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0)         0,
+      rgba(0,0,0,0)         3px,
+      rgba(80,40,15,0.05)   3px,
+      rgba(80,40,15,0.05)   4px
+    ),
+    /* base oak */
+    linear-gradient(180deg, #2b1a0e 0%, #1a0e05 50%, #221308 100%);
+  box-shadow:
+    /* leather inlay around table */
+    inset 0 0 0 1px rgba(180, 130, 70, 0.20),
+    inset 0 0 0 6px var(--leather),
+    inset 0 0 0 7px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 9px rgba(180, 130, 70, 0.15),
+    inset 0 0 80px rgba(0, 0, 0, 0.55),
+    inset 0 -40px 80px rgba(0, 0, 0, 0.45),
+    0 8px 26px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+/* Brass corner studs at each table corner */
+.wb-corner {
+  position: absolute;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, var(--brass-hi) 0%, var(--brass) 45%, var(--brass-lo) 100%);
+  box-shadow:
+    inset 0 -2px 3px rgba(0,0,0,0.5),
+    inset 0 1px 1px rgba(255,235,180,0.6),
+    0 2px 4px rgba(0,0,0,0.55),
+    0 0 8px rgba(255, 200, 120, 0.18);
+  z-index: 4;
+  pointer-events: none;
+}
+.wb-corner.tl { top: 14px; left: 14px; }
+.wb-corner.tr { top: 14px; right: 14px; }
+.wb-corner.bl { bottom: 14px; left: 14px; }
+.wb-corner.br { bottom: 14px; right: 14px; }
+
+/* The candle in the upper-right of the workbench */
+.wb-candle {
+  position: absolute;
+  top: 18px; right: 46px;
+  width: 28px; height: 56px;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+}
+.wb-candle-stick {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 18px; height: 30px;
+  background: linear-gradient(90deg, #d8c08a 0%, #f4e3b2 35%, #d8c08a 70%, #a88a52 100%);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 -3px 4px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.wb-candle-wax {
+  position: absolute;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%);
+  width: 16px; height: 6px;
+  background: radial-gradient(ellipse, #f4e3b2 0%, #d8c08a 70%, transparent 100%);
+  border-radius: 50% 50% 30% 30%;
+}
+.wb-candle-flame {
+  position: absolute;
+  bottom: 32px; left: 50%;
+  transform: translateX(-50%);
+  width: 10px; height: 18px;
+  background:
+    radial-gradient(ellipse at 50% 80%, #fff5b8 0%, #ffc56b 35%, #ff7a30 75%, transparent 100%);
+  border-radius: 50% 50% 40% 40% / 70% 70% 35% 35%;
+  filter: blur(0.4px);
+  animation: wb-flicker 1.6s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+.wb-candle-glow {
+  position: absolute;
+  bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  width: 90px; height: 90px;
+  background: radial-gradient(circle, rgba(255,200,120,0.55) 0%, rgba(255,160,60,0.10) 35%, transparent 70%);
+  filter: blur(8px);
+  animation: wb-glow-pulse 3s ease-in-out infinite;
+}
+@keyframes wb-flicker {
+  0%, 100% { transform: translateX(-50%) scaleY(1)    scaleX(1)    skewX(-2deg); opacity: 0.95; }
+  35%      { transform: translateX(-50%) scaleY(1.10) scaleX(0.92) skewX(2deg);  opacity: 1;    }
+  60%      { transform: translateX(-50%) scaleY(0.96) scaleX(1.04) skewX(-1deg); opacity: 0.85; }
+}
+@keyframes wb-glow-pulse {
+  0%, 100% { opacity: 0.85; transform: translateX(-50%) scale(1);    }
+  50%      { opacity: 1;    transform: translateX(-50%) scale(1.10); }
+}
+
+/* Floating dust motes drifting through the candlelight */
+.wb-motes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+.wb-motes span {
+  position: absolute;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 220, 150, 0.6);
+  filter: blur(0.5px);
+  box-shadow: 0 0 4px rgba(255, 200, 120, 0.5);
+  opacity: 0;
+  animation: wb-mote-drift 14s ease-in-out infinite;
+}
+.wb-motes span:nth-child(1) { left: 15%; bottom: 10%; animation-delay:  0s;   animation-duration: 16s; }
+.wb-motes span:nth-child(2) { left: 38%; bottom:  4%; animation-delay:  3s;   animation-duration: 19s; width: 2px; height: 2px; }
+.wb-motes span:nth-child(3) { left: 55%; bottom: 18%; animation-delay:  6s;   animation-duration: 14s; }
+.wb-motes span:nth-child(4) { left: 72%; bottom:  6%; animation-delay:  9s;   animation-duration: 22s; width: 2px; height: 2px; }
+.wb-motes span:nth-child(5) { left: 88%; bottom: 14%; animation-delay: 12s;   animation-duration: 17s; }
+.wb-motes span:nth-child(6) { left: 28%; bottom: 22%; animation-delay:  4.5s; animation-duration: 20s; width: 4px; height: 4px; }
+@keyframes wb-mote-drift {
+  0%   { transform: translate(0, 0)        scale(0.6); opacity: 0;   }
+  10%  {                                                opacity: 0.6; }
+  50%  { transform: translate(20px, -180px) scale(1);   opacity: 0.8; }
+  90%  {                                                opacity: 0.4; }
+  100% { transform: translate(-10px, -340px) scale(1.2); opacity: 0;  }
+}
+
+/* Make sure the brew-stage sits above ambience */
+.workbench .brew-stage { position: relative; z-index: 5; }
+
+/* ---------- Search & category bar — pinned parchment label ---------- */
+.workbench .book-controls {
+  position: relative;
+  padding: 14px 18px 14px;
+  margin: 6px 0 8px;
+  background:
+    /* parchment texture */
+    radial-gradient(2px 2px at 8% 30%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(1px 1px at 86% 70%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(115% 90% at 50% 25%, var(--parchment-1) 0%, var(--parchment-2) 60%, var(--parchment-3) 100%);
+  border: 1px solid rgba(80, 50, 20, 0.40);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 245, 215, 0.6),
+    inset 0 0 30px rgba(80, 50, 20, 0.15),
+    0 8px 18px rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(0, 0, 0, 0.4);
+}
+/* Brass tacks pinning the parchment label to the workbench */
+.workbench .book-controls > .search-wrap,
+.workbench .book-controls > .cat-select {
+  z-index: 1;
+}
+/* Wax seal "pin" anchoring the label */
+.workbench .book-controls::before {
+  content: "";
+  position: absolute;
+  top: -8px; left: 50%;
+  transform: translateX(-50%) rotate(-6deg);
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, var(--wax-red-hi) 0%, var(--wax-red) 60%, #4a1212 100%);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.7),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(255, 200, 200, 0.4);
+  z-index: 2;
+}
+.workbench .book-controls::after {
+  content: "✶";
+  position: absolute;
+  top: -7px; left: 50%;
+  transform: translateX(-50%) rotate(-6deg);
+  width: 26px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 220, 200, 0.85);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+  z-index: 3;
+  pointer-events: none;
+  line-height: 26px;
+}
+.workbench .search-wrap {
+  background: rgba(255, 248, 220, 0.55);
+  border: 1px solid rgba(80, 50, 20, 0.35);
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 250, 230, 0.7), inset 0 0 6px rgba(80, 50, 20, 0.10);
+}
+.workbench .search-wrap .search-icon {
+  color: var(--ink-soft);
+  font-size: 18px;
+  text-shadow: 0 1px 0 rgba(255, 250, 230, 0.5);
+}
+.workbench #ingredient-search {
+  background: transparent;
+  color: var(--ink);
+  border: none;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-style: italic;
+  padding-left: 36px;
+}
+.workbench #ingredient-search::placeholder {
+  color: var(--ink-faded);
+  font-style: italic;
+}
+.workbench #ingredient-search:focus {
+  outline: 1px dashed var(--ink-faded);
+  outline-offset: 2px;
+}
+.workbench .cat-select {
+  background:
+    linear-gradient(180deg, rgba(255, 248, 220, 0.7), rgba(220, 195, 145, 0.65));
+  color: var(--ink);
+  border: 1px solid rgba(80, 50, 20, 0.40);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 250, 230, 0.6);
+}
+.workbench .cat-select:focus {
+  outline: none;
+  border-color: var(--ink-mid);
+}
+.workbench .cat-select option {
+  background: var(--parchment-2);
+  color: var(--ink);
+}
+
+/* ---------- The Tome ---------- */
+.workbench .book {
+  background: none;
+  box-shadow: none;
+}
+.workbench .book::before,
+.workbench .book::after { display: none; }
+
+/* Page typography upgrade */
+.workbench .book-page {
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.workbench .page-title {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 19px;
+}
+.workbench .page-section h3 {
+  font-family: var(--serif-sc);
+  font-weight: 400;
+  letter-spacing: 0.10em;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+.workbench .book-cover h1 {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-size: 26px;
+  line-height: 1.15;
+  text-shadow:
+    0 1px 0 rgba(255, 240, 210, 0.6),
+    0 2px 1px rgba(80, 50, 20, 0.25);
+}
+.workbench .book-cover .by-line {
+  font-family: var(--hand);
+  font-size: 18px;
+  font-style: normal;
+  color: var(--ink-mid);
+}
+.workbench .book-cover .credit {
+  font-family: var(--hand);
+  font-size: 15px;
+}
+/* Hand-drawn-feel ingredient cards */
+.workbench .tome-ingredient .ing-name {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+.workbench .tome-ingredient .ing-desc {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+}
+.workbench .tome-ingredient .ing-rarity {
+  font-family: var(--hand);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  font-style: normal;
+}
+
+/* ---------- Book navigation — ribbon bookmark buttons ---------- */
+.workbench .book-nav {
+  margin-top: 6px;
+  gap: 10px;
+}
+.workbench .book-btn {
+  background:
+    linear-gradient(180deg, var(--parchment-1) 0%, var(--parchment-3) 100%);
+  color: var(--ink);
+  border: 1px solid rgba(80, 50, 20, 0.5);
+  font-family: var(--serif);
+  font-weight: 700;
+  width: 44px; height: 32px;
+  border-radius: 4px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 250, 230, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.45);
+  position: relative;
+}
+.workbench .book-btn::after {
+  /* little ribbon notch on the bottom */
+  content: "";
+  position: absolute;
+  bottom: -6px; left: 50%;
+  width: 10px; height: 8px;
+  background: inherit;
+  background:
+    linear-gradient(180deg, var(--parchment-3) 0%, var(--parchment-3) 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform: translateX(-50%);
+  border-left: 1px solid rgba(80, 50, 20, 0.35);
+  border-right: 1px solid rgba(80, 50, 20, 0.35);
+}
+.workbench .book-btn:hover {
+  border-color: var(--ink-mid);
+  filter: brightness(1.05);
+}
+.workbench .book-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.workbench .page-indicator {
+  font-family: var(--hand);
+  font-size: 18px;
+  color: rgba(255, 230, 190, 0.75);
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+  font-variant-numeric: normal;
+}
+
+/* ---------- Cauldron contents — a handwritten recipe card ---------- */
+.workbench .cauldron-contents {
+  position: relative;
+  background:
+    /* faint horizontal ruled lines, like a notebook */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 27px,
+      rgba(80, 50, 20, 0.10) 27px,
+      rgba(80, 50, 20, 0.10) 28px
+    ),
+    radial-gradient(115% 95% at 50% 20%, var(--parchment-1) 0%, var(--parchment-2) 60%, var(--parchment-3) 100%);
+  background-position: 0 16px, 0 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  border: none;
+  border-radius: 4px;
+  padding: 22px 22px 18px;
+  box-shadow:
+    /* curled corners shadow */
+    0 12px 24px rgba(0, 0, 0, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.40),
+    inset 0 0 0 1px rgba(80, 50, 20, 0.30),
+    inset 0 0 60px rgba(80, 50, 20, 0.18);
+  /* very slight rotation for character */
+  transform: rotate(0.4deg);
+  /* Ink spots & parchment texture overlay */
+  isolation: isolate;
+}
+.workbench .cauldron-contents::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(2px 2px at 12% 14%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(2px 1px at 70% 22%, rgba(80,50,20,0.08), transparent 60%),
+    radial-gradient(1px 1px at 30% 70%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(2px 2px at 85% 80%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(1px 1px at 50% 50%, rgba(80,50,20,0.07), transparent 60%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+/* Vignette / aged edge */
+.workbench .cauldron-contents::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 35px rgba(80, 50, 20, 0.30);
+}
+.workbench .cauldron-contents > * { position: relative; z-index: 1; }
+
+.workbench .cauldron-contents .panel-head.compact {
+  border-bottom: 1px solid rgba(80, 50, 20, 0.30);
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+.workbench .cauldron-contents .panel-head h2 {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.workbench .cauldron-contents .panel-head h2::before {
+  content: "✒";
+  font-size: 18px;
+  color: var(--ink-mid);
+  margin-right: 2px;
+  letter-spacing: 0;
+}
+
+.workbench .parts-counter {
+  font-family: var(--hand);
+  font-size: 18px;
+  font-weight: 700;
+  background: transparent;
+  color: var(--ink-mid);
+  border: none;
+  padding: 0 6px;
+  letter-spacing: 0.04em;
+  box-shadow: none;
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5);
+}
+.workbench .parts-counter.near-cap { color: #8a5a14; }
+.workbench .parts-counter.at-cap   {
+  color: #8a2c2c;
+  background: transparent;
+  border: none;
+  animation: wb-warn-pulse 1.6s ease-in-out infinite;
+}
+@keyframes wb-warn-pulse {
+  0%, 100% { text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5); }
+  50%      { text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5), 0 0 10px rgba(180, 60, 60, 0.6); }
+}
+
+/* The "empty" prompt */
+.workbench .cauldron-empty {
+  background: transparent;
+  border: none;
+  color: var(--ink-soft);
+  font-family: var(--hand);
+  font-size: 18px;
+  font-style: normal;
+  text-align: center;
+  padding: 24px 12px;
+  position: relative;
+}
+.workbench .cauldron-empty::before {
+  content: "“";
+  position: absolute;
+  top: -8px; left: 18%;
+  font-size: 48px;
+  color: var(--ink-faded);
+  font-family: var(--serif);
+  line-height: 1;
+}
+.workbench .cauldron-empty::after {
+  content: "”";
+  position: absolute;
+  bottom: -28px; right: 18%;
+  font-size: 48px;
+  color: var(--ink-faded);
+  font-family: var(--serif);
+  line-height: 1;
+}
+
+/* The list of ingredients, written like recipe steps */
+.workbench .cauldron-list {
+  margin: 4px 0 14px;
+  gap: 4px;
+  /* Custom scrollbar to match parchment */
+  scrollbar-color: rgba(80, 50, 20, 0.4) transparent;
+}
+.workbench .cauldron-list::-webkit-scrollbar { width: 6px; }
+.workbench .cauldron-list::-webkit-scrollbar-thumb { background: rgba(80, 50, 20, 0.35); border-radius: 4px; }
+
+.workbench .cauldron-line {
+  background: transparent;
+  border: none;
+  border-bottom: 1px dotted rgba(80, 50, 20, 0.30);
+  border-radius: 0;
+  padding: 6px 4px 6px 22px;
+  position: relative;
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--ink);
+}
+.workbench .cauldron-line::before {
+  content: "✦";
+  position: absolute;
+  left: 4px; top: 7px;
+  color: var(--ink-mid);
+  font-size: 12px;
+}
+.workbench .cauldron-line .name {
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+/* +/- parts control inked into the page */
+.workbench .parts-control {
+  background: transparent;
+  border: none;
+  padding: 0;
+  gap: 4px;
+}
+.workbench .parts-control button {
+  color: var(--ink-mid);
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 16px;
+  width: 18px; height: 18px;
+  background: transparent;
+  border: 1px solid rgba(80, 50, 20, 0.30);
+  border-radius: 3px;
+  line-height: 0.9;
+}
+.workbench .parts-control button:hover {
+  background: rgba(80, 50, 20, 0.10);
+  border-color: var(--ink-mid);
+  color: var(--ink);
+}
+.workbench .parts-control .val {
+  font-family: var(--hand);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  min-width: 16px;
+}
+.workbench .remove-btn {
+  color: rgba(138, 44, 44, 0.85);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1;
+}
+.workbench .remove-btn:hover { color: #a02020; }
+
+/* The cap-notice in parchment language */
+.workbench .cap-notice {
+  background: rgba(138, 44, 44, 0.10);
+  color: #7a2020;
+  border: 1px solid rgba(138, 44, 44, 0.35);
+  border-left-width: 3px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* ---------- Totals blocks — like margin notes & sums ---------- */
+.workbench .cauldron-totals { gap: 10px; margin-bottom: 12px; }
+.workbench .totals-block {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 23px,
+      rgba(80, 50, 20, 0.08) 23px,
+      rgba(80, 50, 20, 0.08) 24px
+    ),
+    rgba(255, 245, 215, 0.30);
+  border: 1px solid rgba(80, 50, 20, 0.25);
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-family: var(--serif);
+  color: var(--ink);
+}
+.workbench .totals-block h4 {
+  font-family: var(--serif-sc);
+  letter-spacing: 0.14em;
+  color: var(--ink-mid);
+  font-size: 11px;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(80, 50, 20, 0.25);
+  padding-bottom: 3px;
+}
+.workbench .totals-block .val-row {
+  font-size: 13px;
+  padding: 2px 0;
+  font-family: var(--serif);
+  color: var(--ink);
+}
+.workbench .totals-block .val {
+  color: var(--ink);
+  font-family: var(--hand);
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 700;
+}
+.workbench .totals-block .lbl {
+  color: var(--ink-mid);
+  font-style: italic;
+}
+.workbench .totals-block .val-row.dominant .lbl,
+.workbench .totals-block .val-row.dominant .val {
+  color: #7a2c2c;
+  font-weight: 700;
+}
+.workbench .totals-block .val-row.dominant .lbl::after {
+  content: " ★";
+  color: #8a4a14;
+  font-size: 12px;
+}
+.workbench .tag-swatch {
+  border: 1px solid rgba(80, 50, 20, 0.4);
+  box-shadow: inset 0 0 0 1px rgba(255, 245, 215, 0.4);
+}
+/* Trait chips on the parchment look like tiny wax seals */
+.workbench .totals-block .chip.trait {
+  font-family: var(--serif);
+  background: rgba(170, 80, 30, 0.18);
+  color: #6a2e10;
+  border: 1px solid rgba(170, 80, 30, 0.4);
+  border-radius: 3px;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Action buttons — Brew = brass plate, Clear = ink link ---------- */
+.workbench .cauldron-actions {
+  margin-top: 14px;
+  align-items: center;
+  gap: 14px;
+}
+.workbench .cauldron-actions .btn.primary,
+.workbench #brew-btn {
+  flex: 2;
+  position: relative;
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-size: 15px;
+  padding: 12px 18px;
+  color: #2a1808;
+  text-shadow: 0 1px 0 rgba(255, 235, 180, 0.55);
+  background:
+    /* glossy brass */
+    linear-gradient(180deg,
+      var(--brass-hi) 0%,
+      var(--brass)    45%,
+      #8a5a20         100%);
+  border: 1px solid #5a3a14;
+  border-radius: 5px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 245, 200, 0.7),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(180, 130, 70, 0.6),
+    0 4px 0 #4a2c10,
+    0 6px 14px rgba(0, 0, 0, 0.55);
+  transition: transform 90ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+.workbench #brew-btn::before,
+.workbench #brew-btn::after {
+  /* Brass rivets at each end */
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--brass-hi) 0%, var(--brass) 50%, var(--brass-lo) 100%);
+  box-shadow: inset 0 -1px 1px rgba(0,0,0,0.5), 0 1px 1px rgba(0,0,0,0.5);
+  transform: translateY(-50%);
+}
+.workbench #brew-btn::before { left: 8px;  }
+.workbench #brew-btn::after  { right: 8px; }
+.workbench #brew-btn:hover {
+  filter: brightness(1.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 245, 200, 0.8),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(220, 170, 100, 0.7),
+    0 4px 0 #4a2c10,
+    0 8px 18px rgba(0, 0, 0, 0.6),
+    0 0 18px rgba(255, 180, 80, 0.35);
+}
+.workbench #brew-btn:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 245, 200, 0.6),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.4),
+    0 2px 0 #4a2c10,
+    0 3px 8px rgba(0, 0, 0, 0.55);
+}
+
+.workbench #clear-btn {
+  flex: 0 0 auto;
+  background: transparent;
+  color: rgba(255, 220, 180, 0.60);
+  border: none;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  padding: 6px 10px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+}
+.workbench #clear-btn:hover {
+  color: #f0c690;
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-underline-offset: 4px;
+}
+
+/* ---------- Cauldron row layout: a tad more breathing room ---------- */
+.workbench .cauldron-row {
+  /* The OUTER cauldron-row layout grid (defined far above). The inner
+     list rows now use .cauldron-line. We just nudge alignment here. */
+  gap: 22px;
+}
+
+/* ---------- Page indicator: a hand-written page number ---------- */
+.workbench .book-nav {
+  position: relative;
+}
+.workbench .book-nav::before {
+  /* faint ink dash separator */
+  content: "❦";
+  position: absolute;
+  left: 50%;
+  bottom: -22px;
+  transform: translateX(-50%);
+  color: rgba(255, 220, 180, 0.30);
+  font-size: 18px;
+  pointer-events: none;
+}
+
+/* ---------- Reduce motion preference ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .wb-candle-flame,
+  .wb-candle-glow,
+  .wb-motes span,
+  .workbench .parts-counter.at-cap {
+    animation: none;
+  }
+}
+
+/* ---------- Small screens: workbench eases up on chrome ---------- */
+@media (max-width: 700px) {
+  .workbench { padding: 18px 16px 22px; }
+  .wb-candle { right: 22px; transform: scale(0.85); transform-origin: top right; }
+  .wb-corner.tl, .wb-corner.tr { top: 8px; }
+  .wb-corner.bl, .wb-corner.br { bottom: 8px; }
+  .wb-corner.tl, .wb-corner.bl { left: 8px; }
+  .wb-corner.tr, .wb-corner.br { right: 8px; }
+}
+
+/* ============================================================================
+   PAGE-FLIP BOOK + LINE-WRITTEN INGREDIENT ENTRIES
+   ----------------------------------------------------------------------------
+   The Tome is now powered by PageFlip (StPageFlip) — a vanilla JS clone of
+   turn.js. PageFlip wraps our container with .stf__parent / .stf__wrapper /
+   .stf__block and adds .stf__item to each page. Pages get --soft / --hard
+   and --left / --right classes during flips. We style our own .flip-page
+   class (which PageFlip preserves) so the page contents look right.
+   ============================================================================ */
+
+/* The book container — minimal layout wrapper for Turn.js */
+.workbench .book {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  --page-scale: 1;
+  overflow: hidden;
+}
+.workbench .book-flip {
+  position: relative;
+  /* Turn.js writes the actual pixel width/height inline. We do NOT apply
+     a CSS transform here — Turn.js's flip-angle math reads the cursor
+     position from getBoundingClientRect, and a parent transform would
+     distort that and cause pages to over-rotate. */
+  flex: 0 0 auto;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+.workbench .book-flip.book-stack-mode {
+  width: 100%;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.workbench .book-stack-shell {
+  position: relative;
+  width: min(820px, 100%);
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Per-book color themes. These drive both the stack covers AND the
+   front/back hard covers when that book is open, so the closed and
+   open looks always match. */
+.theme-green {
+  --book-cover:      #2f4035;
+  --book-cover-edge: #14201a;
+  --book-cover-rim:  rgba(220, 170, 100, 0.45);
+  --book-cover-tint: rgba(255, 240, 190, 0.10);
+  --book-cover-ink:  #ead7a8;
+  --book-cover-sub:  rgba(220, 230, 215, 0.80);
+}
+.theme-blue {
+  --book-cover:      #1f3850;
+  --book-cover-edge: #0a1622;
+  --book-cover-rim:  rgba(160, 200, 240, 0.45);
+  --book-cover-tint: rgba(180, 220, 255, 0.10);
+  --book-cover-ink:  #d8e6f4;
+  --book-cover-sub:  rgba(200, 220, 240, 0.80);
+}
+.theme-red {
+  --book-cover:      #4a1e1e;
+  --book-cover-edge: #1c0808;
+  --book-cover-rim:  rgba(240, 180, 130, 0.45);
+  --book-cover-tint: rgba(255, 200, 160, 0.10);
+  --book-cover-ink:  #f4d8b8;
+  --book-cover-sub:  rgba(240, 210, 190, 0.80);
+}
+
+.workbench .book-stack-item {
+  position: absolute;
+  z-index: var(--stack-z, 10);
+  width: 230px;
+  height: 320px;
+  border: 1px solid var(--book-cover-rim, rgba(220, 170, 100, 0.45));
+  border-radius: 6px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(0,0,0,0.55), transparent 70%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,0)    0,
+      rgba(0,0,0,0)    6px,
+      rgba(0,0,0,0.20) 6px,
+      rgba(0,0,0,0.20) 7px
+    ),
+    linear-gradient(180deg, var(--book-cover, var(--cover)) 0%, var(--book-cover-edge, var(--cover-edge)) 100%);
+  box-shadow:
+    0 12px 22px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px var(--book-cover-tint, rgba(255, 240, 190, 0.08)),
+    inset 0 0 25px rgba(0, 0, 0, 0.45);
+  color: var(--book-cover-ink, #ead7a8);
+  cursor: pointer;
+  padding: 0;
+  transform:
+    translate(var(--stack-offset-x, 0), var(--stack-offset-y, 0))
+    rotate(var(--stack-rotate, 0deg));
+  transition: transform 260ms ease, box-shadow 220ms ease, filter 220ms ease;
+}
+
+/* Reuse the open-book hard-cover-art / hard-cover-frame styling so the
+   closed stack book reads identically to the front cover when opened. */
+.workbench .book-stack-item .hard-cover-art {
+  position: absolute; inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+.workbench .book-stack-item .hard-cover-frame {
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--book-cover-rim, rgba(220, 170, 100, 0.45));
+  outline: 2px solid rgba(0,0,0,0.45);
+  outline-offset: -8px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px 12px;
+  box-sizing: border-box;
+  box-shadow:
+    inset 0 0 18px rgba(0,0,0,0.55),
+    inset 0 0 0 1px rgba(0,0,0,0.4);
+  background:
+    radial-gradient(circle at 50% 30%, var(--book-cover-tint, rgba(220, 170, 100, 0.08)), transparent 60%);
+}
+.workbench .book-stack-item .hard-cover-glyph {
+  font-size: 44px;
+  line-height: 1;
+  margin-bottom: 8px;
+  color: var(--brass-hi, #d8a85a);
+  text-shadow:
+    0 1px 0 rgba(0,0,0,0.6),
+    0 0 14px var(--book-cover-tint, rgba(220, 160, 80, 0.40));
+  filter: drop-shadow(0 2px 1px rgba(0,0,0,0.5));
+}
+.workbench .book-stack-item .hard-cover-title {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--book-cover-ink, #ead7a8);
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.7);
+}
+.workbench .book-stack-item .hard-cover-subtitle {
+  font-family: var(--hand);
+  font-size: 15px;
+  color: var(--book-cover-sub, rgba(220, 230, 215, 0.80));
+  margin: 0;
+  font-style: italic;
+}
+
+.workbench .book-stack-item:hover {
+  z-index: 40;
+  filter: brightness(1.08);
+  transform:
+    translate(var(--stack-offset-x, 0), calc(var(--stack-offset-y, 0px) - 4px))
+    rotate(var(--stack-rotate, 0deg));
+}
+
+.workbench .book-stack-item.is-selected {
+  z-index: 30;
+  transform:
+    translate(var(--stack-offset-x, 0), calc(var(--stack-offset-y, 0px) - 14px))
+    rotate(0deg)
+    scale(1.05);
+  box-shadow:
+    0 18px 34px rgba(0, 0, 0, 0.6),
+    0 0 24px var(--book-cover-tint, rgba(240, 190, 120, 0.25)),
+    inset 0 0 0 1px var(--book-cover-tint, rgba(255, 240, 190, 0.14)),
+    inset 0 0 25px rgba(0, 0, 0, 0.45);
+}
+
+/* Mouse equivalent of the down-arrow shortcut: a "Book Select" pill that
+   appears above the open spread only while the book is closed (i.e. on the
+   front cover), so it never sits on top of page content. */
+.workbench #book {
+  position: relative;
+}
+.workbench .book-select-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 30;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-family: var(--serif);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--ink, #2a1808);
+  background:
+    linear-gradient(180deg, var(--parchment-1) 0%, var(--parchment-3) 100%);
+  border: 1px solid rgba(80, 50, 20, 0.5);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 250, 230, 0.6),
+    0 4px 10px rgba(0, 0, 0, 0.45);
+  transition: filter 120ms ease, transform 120ms ease, opacity 200ms ease;
+  opacity: 0;
+}
+.workbench .book-select-btn.is-visible {
+  display: inline-flex;
+  opacity: 1;
+}
+.workbench .book-select-btn:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+.workbench .book-select-btn:active {
+  transform: translateY(0);
+}
+.workbench .book-select-btn span { font-size: 14px; line-height: 1; }
+
+/* The OUTER page (.book-leaf) is what Turn.js owns: it sets width and
+   height inline based on the values we passed to .turn({ width, height }).
+   Inside it, .flip-page is the LOGICAL 290×410 parchment, scaled to fit
+   via --page-scale. This split keeps Turn.js's geometry clean while the
+   off-screen page-packer can keep measuring text wrapping at 290×410. */
+.workbench .book-leaf {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+}
+.workbench .book-leaf > .flip-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Logical page dimensions — these MUST match PAGE_FLIP_PAGE_W /
+     PAGE_FLIP_PAGE_H in js/ui.js or text wrap will diverge from the
+     packer's measurements. */
+  width: 290px;
+  height: 410px;
+  transform: scale(var(--page-scale, 1));
+  transform-origin: top left;
+  /* Override the cross-cutting `position: relative` that normally lives
+     on .flip-page (we need absolute here so the transform-origin lines
+     up at the page corner). */
+}
+
+/* Turn.js wrappers — Turn.js wraps each of our .book-leaf pages in a
+   .page-wrapper div (and adds a `page p<N> odd|even` class on the leaf
+   itself). Keep them transparent so the leather frame underneath shows. */
+.workbench .book .page-wrapper,
+.workbench .book .book-leaf.page {
+  background: transparent;
+}
+
+/* The actual page surface PageFlip renders.
+   IMPORTANT: do NOT set `position` here. PageFlip's injected CSS sets
+   `.stf__item { position: absolute; }` and the library writes inline
+   transforms assuming that. For static (left/right) pages PageFlip writes
+   `position: absolute` inline, but for the FLIPPING and BOTTOM pages it
+   does NOT — so any stylesheet `position: relative` on `.flip-page` would
+   knock those pages out of their absolute-positioned slot and they'd
+   appear missing or stacked in the wrong place. */
+/* The page rule-line cadence. Body text on the page uses this as its
+   line-height so each baseline lands neatly on a printed rule. Tight
+   spacing keeps each ingredient entry compact, like a real field guide. */
+:root {
+  --page-rule: 14px;
+}
+
+.workbench .flip-page {
+  background:
+    /* horizontal ruled lines (top-most background layer) — old ledger style.
+       Drawn at the BOTTOM of each rule cell (where the text baseline lands)
+       so handwritten body text appears to sit on the line. */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent calc(var(--page-rule) - 1px),
+      rgba(80, 45, 15, 0.18) calc(var(--page-rule) - 1px),
+      rgba(80, 45, 15, 0.20) var(--page-rule)
+    ),
+    /* parchment gradient base */
+    radial-gradient(110% 80% at 50% 30%, #faecc7 0%, #ecd9ad 60%, #d8bf85 100%);
+  /* Nudge the rule layer so its lines fall under the text baseline of each
+     body-text row (≈ 2px above the bottom of the line-box at this cadence). */
+  background-position: 0 -2px, 0 0;
+  color: #3a2616;
+  padding: 18px 28px 28px;
+  font-family: var(--serif);
+  /* Body text sized so its rendered line-box fits inside one --page-rule
+     row. With most serifs at 14px the intrinsic line-box is ~17–20px,
+     which would overflow the 14px ruled cadence; 12px tucks neatly inside. */
+  font-size: 12px;
+  line-height: var(--page-rule);
+  overflow: hidden;
+  box-sizing: border-box;
+  /* Each page is its own painting context. This keeps PageFlip's clip-path
+     from leaking content into other pages and keeps z-index:-1 on the
+     decorative pseudo-elements scoped to this page only. */
+  isolation: isolate;
+}
+
+/* On the binding-side of each page, draw a faint vertical margin line —
+   the kind you'd see on a real lab notebook or ledger leaf. */
+.workbench .flip-page.--left {
+  background:
+    /* margin line on the right (gutter) side */
+    linear-gradient(
+      90deg,
+      transparent calc(100% - 28px),
+      rgba(140, 60, 30, 0.35) calc(100% - 28px),
+      rgba(140, 60, 30, 0.35) calc(100% - 27px),
+      transparent calc(100% - 27px)
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent calc(var(--page-rule) - 1px),
+      rgba(80, 45, 15, 0.18) calc(var(--page-rule) - 1px),
+      rgba(80, 45, 15, 0.20) var(--page-rule)
+    ),
+    radial-gradient(110% 80% at 50% 30%, #faecc7 0%, #ecd9ad 60%, #d8bf85 100%);
+  background-position: 0 0, 0 -2px, 0 0;
+}
+.workbench .flip-page.--right {
+  background:
+    /* margin line on the left (gutter) side */
+    linear-gradient(
+      90deg,
+      transparent 27px,
+      rgba(140, 60, 30, 0.35) 27px,
+      rgba(140, 60, 30, 0.35) 28px,
+      transparent 28px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent calc(var(--page-rule) - 1px),
+      rgba(80, 45, 15, 0.18) calc(var(--page-rule) - 1px),
+      rgba(80, 45, 15, 0.20) var(--page-rule)
+    ),
+    radial-gradient(110% 80% at 50% 30%, #faecc7 0%, #ecd9ad 60%, #d8bf85 100%);
+  background-position: 0 0, 0 -2px, 0 0;
+}
+/* Parchment freckles */
+.workbench .flip-page::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(2px 2px at 12% 18%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(2px 1px at 70% 30%, rgba(80,50,20,0.08), transparent 60%),
+    radial-gradient(2px 2px at 30% 70%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(1px 1px at 85% 85%, rgba(80,50,20,0.10), transparent 60%),
+    radial-gradient(2px 2px at 50% 50%, rgba(80,50,20,0.06), transparent 60%);
+  pointer-events: none;
+  /* Sit behind in-flow content (which is contained by the page's
+     own stacking context via isolation: isolate). */
+  z-index: -1;
+}
+/* Soft inner edge wear */
+.workbench .flip-page::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 40px rgba(80,50,20,0.18);
+  z-index: -1;
+}
+
+/* Left vs right pages get an inner-spine shadow (gutter) */
+.workbench .flip-page.--left {
+  box-shadow: inset -14px 0 22px rgba(0,0,0,0.22);
+  border-radius: 4px 0 0 4px;
+}
+.workbench .flip-page.--right {
+  box-shadow: inset  14px 0 22px rgba(0,0,0,0.22);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Typography upgrades on the new flip pages — same display fonts as before */
+.workbench .flip-page .page-title {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 19px;
+  color: #2a1808;
+  text-shadow: 0 1px 0 rgba(255,235,200,0.5);
+  border-bottom: 2px solid rgba(80,50,20,0.25);
+  padding-bottom: 4px;
+  margin: 0 0 6px;
+}
+.workbench .flip-page .page-subtitle {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  color: #5a3a1a;
+  margin: 0 0 12px;
+}
+.workbench .flip-page .page-section { margin-bottom: 12px; }
+.workbench .flip-page .page-section h3 {
+  font-family: var(--serif-sc);
+  font-weight: 400;
+  letter-spacing: 0.10em;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #4a2c10;
+  border-bottom: 1px dashed rgba(80,50,20,0.35);
+  padding-bottom: 2px;
+  margin: 0 0 4px;
+}
+.workbench .flip-page .page-section p,
+.workbench .flip-page .page-section li {
+  font-size: 13px;
+  color: #3a2616;
+  margin: 3px 0;
+}
+
+/* Prose pages (Instructions and Recipes) — lock every text element to the
+   page's ruled cadence so wrapped lines sit on the printed rules, the same
+   way `.tome-entries` does for the Ingredients book. The wrapper adds the
+   same one-rule top inset the ingredient tome uses, then headings and
+   paragraphs get line-heights and margins that are exact multiples of
+   `--page-rule`. The dashed/solid underlines on titles use box-shadow so
+   they don't add 1–2px of off-rule height the way border-bottom does. */
+.workbench .flip-page .page-prose {
+  padding-top: var(--page-rule);
+  font-size: 12px;
+  line-height: var(--page-rule);
+}
+.workbench .flip-page .page-prose .page-title {
+  font-size: 18px;
+  line-height: calc(var(--page-rule) * 2);
+  padding-bottom: 0;
+  border-bottom: none;
+  box-shadow: inset 0 -2px 0 rgba(80,50,20,0.25);
+  margin: 0 0 var(--page-rule);
+}
+.workbench .flip-page .page-prose .page-subtitle {
+  font-size: 12px;
+  line-height: var(--page-rule);
+  margin: 0 0 var(--page-rule);
+}
+.workbench .flip-page .page-prose .page-section {
+  margin: 0 0 var(--page-rule);
+}
+.workbench .flip-page .page-prose .page-section:last-child {
+  margin-bottom: 0;
+}
+.workbench .flip-page .page-prose .page-section h3 {
+  font-size: 12px;
+  line-height: var(--page-rule);
+  padding-bottom: 0;
+  border-bottom: none;
+  box-shadow: inset 0 -1px 0 rgba(80,50,20,0.35);
+  margin: 0 0 var(--page-rule);
+}
+.workbench .flip-page .page-prose .page-section p,
+.workbench .flip-page .page-prose .page-section li {
+  font-size: 12px;
+  line-height: var(--page-rule);
+  margin: 0;
+}
+.workbench .flip-page .page-prose .page-section p + p {
+  margin-top: var(--page-rule);
+}
+.workbench .flip-page .page-prose .page-prose-center {
+  text-align: center;
+  font-style: italic;
+  margin: var(--page-rule) 0 0;
+}
+.workbench .flip-page .page-prose .essence-row,
+.workbench .flip-page .page-prose .trait-row {
+  font-size: 12px;
+  line-height: var(--page-rule);
+}
+.workbench .flip-page .page-folio {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--hand);
+  font-size: 14px;
+  color: rgba(80,50,20,0.55);
+  letter-spacing: 0.08em;
+  z-index: 1;
+}
+
+/* Cover page treatment on flip pages */
+.workbench .flip-page .book-cover {
+  text-align: center;
+  padding-top: 40px;
+}
+.workbench .flip-page .book-cover .glyph {
+  font-size: 72px;
+  display: block;
+  margin: 0 0 16px;
+  filter: drop-shadow(0 2px 0 rgba(255,235,200,0.5)) drop-shadow(0 4px 12px rgba(80,50,20,0.5));
+}
+.workbench .flip-page .book-cover h1 {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  font-size: 28px;
+  line-height: 1.15;
+  color: #2a1808;
+  margin: 0 0 10px;
+  text-shadow: 0 1px 0 rgba(255,235,200,0.6), 0 2px 1px rgba(80,50,20,0.25);
+}
+.workbench .flip-page .book-cover .by-line {
+  font-family: var(--hand);
+  font-size: 18px;
+  color: #5a3010;
+  margin: 0 0 22px;
+}
+.workbench .flip-page .book-cover .credit {
+  position: absolute;
+  bottom: 30px;
+  left: 0; right: 0;
+  font-family: var(--hand);
+  font-size: 16px;
+  color: rgba(80,50,20,0.65);
+}
+
+/* Essence/trait reference rows reused on the flip pages */
+.workbench .flip-page .essence-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+}
+.workbench .flip-page .essence-row .e-name { font-family: var(--display); font-weight: 600; letter-spacing: 0.04em; font-size: 12px; }
+.workbench .flip-page .essence-row .e-desc { font-style: italic; }
+.workbench .flip-page .trait-row .t-name { font-family: var(--display); font-weight: 600; letter-spacing: 0.04em; font-size: 12px; }
+.workbench .flip-page .trait-row .t-desc { font-style: italic; font-size: 12px; }
+
+/* ---------- THE MAIN EVENT: line-written ingredient entries ---------- */
+.workbench .tome-entries {
+  display: flex;
+  flex-direction: column;
+  /* Exact pixel gap between entries (no margin-collapse) so vertical rhythm
+     stays locked to the page's ruled background. */
+  gap: calc(var(--page-rule) * 2);
+  /* Reserve one ruled line at the top of the page so the first entry's
+     rarity scribble (which sits with negative top) has room to live. */
+  padding: var(--page-rule) 0 0;
+  margin: 0;
+}
+
+/* Each entry — one flowing paragraph of ink on the leaf, no card chrome.
+   The paragraph's line-height matches the page's ruled cadence so every
+   wrapped line lands on a rule. The scribbled rarity tag is hung from the
+   top-left as an absolutely-positioned annotation. */
+.workbench .tome-entry {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  position: relative;
+  font-family: var(--serif);
+  line-height: var(--page-rule);
+  appearance: none;
+  -webkit-appearance: none;
+  transition: background 180ms ease;
+}
+/* Ornament between entries — gap comes from .tome-entries { gap }. */
+.workbench .tome-entry + .tome-entry::before {
+  content: "❦";
+  position: absolute;
+  top: calc(var(--page-rule) * -1.1);
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(80, 50, 20, 0.40);
+  font-size: 13px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Ink wash on hover — like a fingertip smudging the page */
+.workbench .tome-entry:hover {
+  background:
+    linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 240, 200, 0.45) 30%,
+      rgba(255, 240, 200, 0.45) 70%,
+      transparent 100%);
+}
+.workbench .tome-entry:hover .entry-name {
+  text-shadow: 0 0 10px rgba(176, 80, 30, 0.25);
+}
+.workbench .tome-entry:focus-visible {
+  outline: 1px dashed rgba(80, 50, 20, 0.6);
+  outline-offset: 2px;
+}
+
+/* The single paragraph. Text justification keeps the right edge tidy
+   like a printed page; line-height locks every wrapped line onto a rule.
+   The whole paragraph is set in italic with a warm ink color — the same
+   treatment that used to live only on the fluff line — so the body copy
+   reads uniformly as scribed prose. The bold title overrides back to
+   upright so it still reads as a heading. */
+.workbench .entry-paragraph {
+  margin: 0;
+  padding: 0;
+  font-family: var(--serif);
+  /* Match .flip-page body size so wrapped lines land cleanly on each rule. */
+  font-size: 12px;
+  line-height: var(--page-rule);
+  color: #5a3a1a;
+  font-style: italic;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* Bold inline title — small caps, ink-dark, kept upright so it stands out
+   from the italicised body copy around it. */
+.workbench .entry-name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-style: normal;
+  /* Slightly smaller than body text: the display face has tall caps; at 12px
+     the glyph box can exceed one --page-rule line, so the line box grows past
+     line-height and each entry adds a sliver of drift down the page. */
+  font-size: 11px;
+  line-height: var(--page-rule);
+  letter-spacing: 0.06em;
+  color: #2a1808;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5);
+}
+
+/* Rarity scribble — a handwritten margin annotation that sits above the
+   ingredient name, leaning slightly as if jotted in haste. The tag is
+   absolutely-positioned so it doesn't disturb the body line cadence. */
+.workbench .entry-rarity-scribble {
+  position: absolute;
+  /* Tucked into the gap above the entry. Negative top pulls it up into
+     the breathing room between entries; the first entry has page top-
+     padding to absorb it. Negative left lets it lean a touch into the
+     page's gutter, the way a scribbled annotation would. */
+  top: calc(var(--page-rule) * -1);
+  left: -20px;
+  font-family: var(--hand);
+  font-size: 14px;
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  text-transform: lowercase;
+  /* Slight slant = quick scribble feel */
+  transform: rotate(-7deg);
+  transform-origin: left bottom;
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.6);
+  pointer-events: none;
+  z-index: 2;
+  line-height: 1;
+}
+.workbench .entry-rarity-scribble.r-uncommon  { color: #2c6f4a; }
+.workbench .entry-rarity-scribble.r-rare      { color: #2c5680; }
+.workbench .entry-rarity-scribble.r-very_rare { color: #5a2c80; }
+.workbench .entry-rarity-scribble.r-legendary { color: #8a4a14; }
+
+/* Author's note — an optional inline tail at the end of the paragraph.
+   Currently the slot is always empty by design (see authorNoteFor()), but
+   the styling is here so per-ingredient notes drop in cleanly: a small-
+   caps label followed by italicised commentary in the same warm ink. */
+.workbench .entry-author-note {
+  font-style: italic;
+  color: #5a3a1a;
+}
+.workbench .entry-author-note .note-label {
+  font-family: var(--serif-sc);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  margin-right: 2px;
+}
+
+/* "Characteristics:" tail clause — same paragraph, just a label + list. */
+.workbench .char-label {
+  font-family: var(--serif-sc);
+  font-style: normal;
+  letter-spacing: 0.10em;
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  margin-right: 2px;
+}
+.workbench .ess-name {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-style: normal;
+  white-space: nowrap;
+}
+.workbench .ess-w {
+  font-family: var(--hand);
+  font-weight: 700;
+  /* Hand script can exceed 14px at 12px — see .entry-name comment. */
+  font-size: 10px;
+  line-height: var(--page-rule);
+  margin-left: 1px;
+  opacity: 0.85;
+}
+.workbench .entry-traits .trait-name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6a3010;
+  white-space: nowrap;
+}
+.workbench .entry-traits .trait-name::before {
+  content: "★ ";
+  color: #8a4a14;
+}
+.workbench .entry-sep {
+  color: rgba(80, 50, 20, 0.55);
+}
+
+/* Empty-page notice on the parchment */
+.workbench .flip-page .tome-empty {
+  text-align: center;
+  font-family: var(--hand);
+  font-size: 20px;
+  color: rgba(80, 50, 20, 0.6);
+  padding: 60px 20px;
+  font-style: normal;
+}
+
+/* When the cauldron is full, dim every entry but keep the page legible */
+#book.at-cap .tome-entry {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Hide the legacy flip animation rules (they're not in the DOM anymore) */
+.workbench .book-spread,
+.workbench .book-binding,
+.workbench .page-edge { display: none !important; }
+
+/* Turn.js page corners hint — Turn.js shows a corner curl on hover at the
+   bottom of pages; nudge the cursor so users know they can drag to flip. */
+.workbench .book .book-leaf:hover  { cursor: grab; }
+.workbench .book .book-leaf:active { cursor: grabbing; }
+
+/* Pointer-events explicit on tome entries: Turn.js sometimes overlays a
+   transparent corner element to capture flips, and we want clicks on
+   entries to still register through it. */
+.workbench .tome-entry,
+.workbench .tome-entry * { pointer-events: auto; }
+
+/* A subtle outer shadow on the visible spread — gives the book "depth".
+   Applied to Turn.js's outer .page-wrapper so it tracks each leaf, even
+   while pages are mid-flip. */
+.workbench .book .page-wrapper { filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4)); }
+
+/* ---------- HARDCOVER PAGES (front + back) ----------
+   Turn.js renders any page with class="hard" as a rigid leaf. We piggy-back
+   our own .flip-page class for size/font, then override the parchment look
+   with a dark grayish-green leather-and-brass cover treatment. */
+.workbench .flip-page.hard {
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(0,0,0,0.55), transparent 70%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,0)    0,
+      rgba(0,0,0,0)    6px,
+      rgba(0,0,0,0.20) 6px,
+      rgba(0,0,0,0.20) 7px
+    ),
+    linear-gradient(180deg, var(--book-cover, var(--cover)) 0%, var(--book-cover-edge, var(--cover-edge)) 100%);
+  color: var(--book-cover-ink, #d6e4d9);
+  padding: 0;
+  /* Override the parchment ruled-line backgrounds the .--left / .--right
+     rules introduce on soft pages by being more specific. */
+}
+.workbench .flip-page.hard.--left,
+.workbench .flip-page.hard.--right {
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(0,0,0,0.55), transparent 70%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,0)    0,
+      rgba(0,0,0,0)    6px,
+      rgba(0,0,0,0.20) 6px,
+      rgba(0,0,0,0.20) 7px
+    ),
+    linear-gradient(180deg, var(--book-cover, var(--cover)) 0%, var(--book-cover-edge, var(--cover-edge)) 100%);
+  background-position: 0 0;
+}
+.workbench .flip-page.hard.--left  { box-shadow: inset -10px 0 24px rgba(0,0,0,0.45); }
+.workbench .flip-page.hard.--right { box-shadow: inset  10px 0 24px rgba(0,0,0,0.45); }
+/* Hide the parchment freckles + edge-wear pseudo-elements on hard covers. */
+.workbench .flip-page.hard::before,
+.workbench .flip-page.hard::after { display: none; }
+
+/* The art panel painted onto the front cover */
+.workbench .hard-cover-art {
+  position: absolute; inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  box-sizing: border-box;
+}
+.workbench .hard-cover-frame {
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--book-cover-rim, rgba(220, 170, 100, 0.45));
+  outline: 2px solid rgba(0,0,0,0.45);
+  outline-offset: -8px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  padding: 18px 12px;
+  box-sizing: border-box;
+  box-shadow:
+    inset 0 0 18px rgba(0,0,0,0.55),
+    inset 0 0 0 1px rgba(0,0,0,0.4);
+  background:
+    radial-gradient(circle at 50% 30%, var(--book-cover-tint, rgba(220, 170, 100, 0.08)), transparent 60%);
+}
+.workbench .hard-cover-glyph {
+  font-size: 56px;
+  color: var(--brass-hi, #d8a85a);
+  text-shadow:
+    0 1px 0 rgba(0,0,0,0.6),
+    0 0 14px var(--book-cover-tint, rgba(220, 160, 80, 0.40));
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 1px rgba(0,0,0,0.5));
+}
+.workbench .hard-cover-title {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  font-size: 22px;
+  line-height: 1.15;
+  color: var(--book-cover-ink, #ead7a8);
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.7), 0 0 8px var(--book-cover-tint, rgba(220, 160, 80, 0.25));
+}
+.workbench .hard-cover-subtitle {
+  font-family: var(--hand);
+  font-size: 16px;
+  color: var(--book-cover-sub, rgba(220, 230, 215, 0.80));
+  margin: 0;
+  font-style: italic;
+}
+.workbench .hard-cover-stats {
+  font-family: var(--serif-sc);
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: rgba(220, 170, 100, 0.65);
+  margin-top: 10px;
+}
+/* The end-paper (inside face of the cover) — a marbled solid leather panel
+   with no decoration, so the eye reads it as a structural surface rather
+   than a content page. */
+.workbench .hard-cover-endpaper {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 50%, rgba(0,0,0,0.30), transparent 70%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(0,0,0,0)         0,
+      rgba(0,0,0,0)         3px,
+      rgba(255,255,255,0.04) 3px,
+      rgba(255,255,255,0.04) 4px
+    ),
+    linear-gradient(180deg, var(--book-cover-edge, var(--cover-edge)) 0%, color-mix(in srgb, var(--book-cover-edge, var(--cover-edge)) 70%, #000 30%) 100%);
+}
+
+/* ============================================================================
+   CAULDRON STATION OVERHAUL — dense dashboard parchment
+   ----------------------------------------------------------------------------
+   Goal: keep the parchment-card aesthetic but make the side panel a compact
+   dashboard so essence balance + brew stats fit at a glance instead of
+   stacking vertically and falling off the screen.
+   ============================================================================ */
+
+/* ---- Cauldron station layout: visualization + dashboard side-by-side ---- */
+.workbench .cauldron-row {
+  align-items: stretch;
+  gap: 22px;
+}
+.workbench .cauldron-visual {
+  /* Pin the cauldron to the bottom of the row so its rim aligns with the
+     dashboard's mid-height, and so the floating potion always has space. */
+  align-self: flex-end;
+  margin-bottom: 6px;
+  /* Drive scaling fire/steam/glow off this CSS var written from JS. */
+  --cauldron-intensity: 0;
+}
+@media (max-width: 600px) {
+  .workbench .cauldron-row { gap: 14px; }
+  .workbench .cauldron-visual { align-self: center; }
+}
+
+/* ---- Dashboard panel header bar ---- */
+.workbench .cauldron-contents {
+  /* Counteract the slight "scribbled note" rotation when content is dense
+     so the dashboard doesn't look skewed. */
+  transform: none;
+  padding: 16px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Critical: keeps the dashboard from spilling under the cauldron's
+     floating potion when the analysis fills out. */
+  min-width: 0;
+}
+.workbench .cauldron-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(80, 50, 20, 0.30);
+}
+.workbench .cauldron-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.workbench .cauldron-title-row h2 {
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0;
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.workbench .cauldron-glyph {
+  font-size: 19px;
+  color: var(--ink-mid);
+  filter: drop-shadow(0 1px 0 rgba(255, 240, 200, 0.4));
+}
+/* Status badge — Idle/Mixing/Ready/Volatile/Brimming. */
+.workbench .cauldron-status {
+  font-family: var(--serif-sc);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 2px 9px 1px;
+  border-radius: 999px;
+  border: 1px solid rgba(80, 50, 20, 0.35);
+  background: rgba(255, 248, 220, 0.45);
+  color: var(--ink-soft);
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.4);
+}
+.workbench .cauldron-status.status-idle      { color: rgba(80, 50, 20, 0.55); border-color: rgba(80, 50, 20, 0.25); }
+.workbench .cauldron-status.status-mixing    { color: #5a3a1a; border-color: rgba(120, 80, 30, 0.45); background: rgba(255, 230, 175, 0.55); }
+.workbench .cauldron-status.status-ready     { color: #2c6f4a; border-color: rgba(60, 140, 80, 0.55); background: rgba(180, 230, 195, 0.55); }
+.workbench .cauldron-status.status-volatile  { color: #8a2c2c; border-color: rgba(180, 60, 60, 0.55); background: rgba(245, 200, 200, 0.55); animation: status-throb 1.6s ease-in-out infinite; }
+.workbench .cauldron-status.status-brimming  { color: #6a4a10; border-color: rgba(180, 140, 40, 0.55); background: rgba(245, 220, 150, 0.55); animation: status-throb 1.6s ease-in-out infinite; }
+@keyframes status-throb {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 200, 100, 0); }
+  50%      { box-shadow: 0 0 0 4px rgba(255, 200, 100, 0.18); }
+}
+.workbench .cauldron-title-row .parts-counter {
+  margin-left: auto;
+  font-family: var(--hand);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink-mid);
+  background: transparent;
+  border: none;
+  padding: 0;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Capacity fill bar — visualizes "how full" the cauldron is. ---- */
+.workbench .parts-fill {
+  position: relative;
+  width: 100%;
+}
+.workbench .parts-fill-track {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 8px;
+  background:
+    linear-gradient(180deg, rgba(80, 50, 20, 0.20), rgba(80, 50, 20, 0.10)),
+    rgba(255, 245, 215, 0.45);
+  border: 1px solid rgba(80, 50, 20, 0.40);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 2px rgba(80, 50, 20, 0.35),
+    inset 0 -1px 0 rgba(255, 245, 215, 0.5);
+}
+.workbench .parts-fill-bar {
+  --p: 0%;
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--p);
+  background:
+    linear-gradient(180deg, var(--brass-hi) 0%, var(--brass) 60%, #8a5a20 100%);
+  border-radius: 999px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 245, 200, 0.65),
+    inset 0 -1px 1px rgba(80, 40, 0, 0.3),
+    0 0 6px rgba(255, 180, 80, 0.30);
+  transition: width 240ms cubic-bezier(0.34, 1.4, 0.64, 1), background 240ms ease;
+}
+.workbench .parts-fill-bar.near-cap {
+  background: linear-gradient(180deg, #f0c36d 0%, #c98a26 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 245, 200, 0.65),
+    inset 0 -1px 1px rgba(80, 40, 0, 0.3),
+    0 0 8px rgba(240, 195, 109, 0.55);
+}
+.workbench .parts-fill-bar.at-cap {
+  background: linear-gradient(180deg, #e08484 0%, #8a2c2c 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 220, 220, 0.65),
+    inset 0 -1px 1px rgba(60, 0, 0, 0.4),
+    0 0 10px rgba(239, 111, 122, 0.55);
+  animation: fill-warn 1.4s ease-in-out infinite;
+}
+@keyframes fill-warn {
+  0%, 100% { filter: brightness(1);    }
+  50%      { filter: brightness(1.18); }
+}
+.workbench .parts-fill-ticks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.workbench .parts-fill-tick {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: rgba(80, 50, 20, 0.35);
+  transform: translateX(-0.5px);
+}
+
+/* ---- Action buttons live INSIDE the header now (always visible). ---- */
+.workbench .cauldron-head .cauldron-actions {
+  margin-top: 0;
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+.workbench .cauldron-head #brew-btn {
+  flex: 2;
+  padding: 10px 14px;
+  font-size: 14px;
+  letter-spacing: 0.28em;
+}
+.workbench .cauldron-head #brew-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 245, 200, 0.4),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.25),
+    0 2px 0 #4a2c10;
+}
+.workbench .cauldron-head #clear-btn {
+  flex: 0 0 auto;
+  align-self: center;
+}
+
+/* ---- Section labels ---- */
+.workbench .cauldron-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ---- Compact ingredient lines ---- */
+.workbench .cauldron-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  scrollbar-color: rgba(80, 50, 20, 0.4) transparent;
+}
+.workbench .cauldron-list::-webkit-scrollbar { width: 6px; }
+.workbench .cauldron-list::-webkit-scrollbar-thumb { background: rgba(80, 50, 20, 0.35); border-radius: 4px; }
+
+.workbench .cauldron-line {
+  display: grid;
+  grid-template-columns: 10px 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 2px 5px 2px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dotted rgba(80, 50, 20, 0.28);
+  border-radius: 0;
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--ink);
+  position: relative;
+}
+.workbench .cauldron-line:last-child { border-bottom: none; }
+/* Drop the old ✦ pseudo so the colored dot speaks for itself. */
+.workbench .cauldron-line::before { content: none; }
+.workbench .cauldron-line .line-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 1px solid rgba(80, 50, 20, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(255, 245, 215, 0.35), 0 1px 0 rgba(255, 240, 200, 0.4);
+  flex-shrink: 0;
+}
+.workbench .cauldron-line .name {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* The empty-state nudge keeps its handwritten feel, just smaller/tighter. */
+.workbench .cauldron-empty {
+  background: transparent;
+  border: 1px dashed rgba(80, 50, 20, 0.30);
+  color: var(--ink-soft);
+  font-family: var(--hand);
+  font-size: 16px;
+  font-style: normal;
+  text-align: center;
+  padding: 14px 12px;
+  border-radius: 4px;
+  position: relative;
+}
+.workbench .cauldron-empty::before,
+.workbench .cauldron-empty::after { content: none; }
+
+/* ---- Analysis blocks: dense visual dashboard ---- */
+.workbench .analysis-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+.workbench .analysis-block {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 19px,
+      rgba(80, 50, 20, 0.06) 19px,
+      rgba(80, 50, 20, 0.06) 20px
+    ),
+    rgba(255, 245, 215, 0.32);
+  border: 1px solid rgba(80, 50, 20, 0.25);
+  border-radius: 4px;
+  padding: 8px 10px 9px;
+}
+.workbench .analysis-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 6px;
+  border-bottom: 1px solid rgba(80, 50, 20, 0.20);
+  padding-bottom: 4px;
+}
+.workbench .analysis-title {
+  font-family: var(--serif-sc);
+  letter-spacing: 0.14em;
+  color: var(--ink-mid);
+  font-size: 11px;
+  margin: 0;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.4);
+}
+.workbench .analysis-sub {
+  font-family: var(--hand);
+  font-size: 13px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}
+
+/* Dominant essence headline pinned to the essence block header */
+.workbench .dominant-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 8px 1px 5px;
+  border-radius: 999px;
+  background: rgba(80, 50, 20, 0.10);
+  border: 1px solid rgba(80, 50, 20, 0.30);
+  font-family: var(--serif);
+  font-size: 11px;
+  color: var(--ink);
+}
+.workbench .dominant-badge .essence-dot {
+  width: 8px; height: 8px;
+}
+.workbench .dominant-badge .dominant-name {
+  font-weight: 700;
+  font-style: italic;
+}
+.workbench .dominant-badge .dominant-pct {
+  font-family: var(--hand);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-mid);
+}
+
+/* ---- Stacked essence bar ---- */
+.workbench .essence-bar {
+  display: flex;
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(80, 50, 20, 0.40);
+  box-shadow:
+    inset 0 1px 2px rgba(80, 50, 20, 0.30),
+    inset 0 -1px 0 rgba(255, 245, 215, 0.4);
+  margin: 2px 0 8px;
+  background: rgba(255, 245, 215, 0.4);
+}
+.workbench .essence-slice {
+  display: block;
+  width: var(--w, 0%);
+  height: 100%;
+  transition: width 240ms ease, filter 200ms ease;
+  position: relative;
+}
+.workbench .essence-slice.dominant {
+  filter: brightness(1.1) saturate(1.15);
+  box-shadow: inset 0 0 0 1px rgba(255, 240, 200, 0.5);
+}
+.workbench .essence-slice.empty {
+  width: 100%;
+  background: rgba(80, 50, 20, 0.10);
+}
+
+/* Top-3 essence list (with a "+N more" tail when relevant) */
+.workbench .essence-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 12px;
+}
+.workbench .essence-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--serif);
+  font-size: 12px;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.workbench .essence-item.dominant .essence-name {
+  font-weight: 700;
+  color: #2a1808;
+}
+.workbench .essence-item.dominant .essence-name::after {
+  content: " ★";
+  font-size: 10px;
+  color: #8a4a14;
+  letter-spacing: 0;
+}
+.workbench .essence-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid rgba(80, 50, 20, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(255, 245, 215, 0.4);
+  flex-shrink: 0;
+}
+.workbench .essence-name {
+  font-style: italic;
+  color: var(--ink-mid);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.workbench .essence-w {
+  font-family: var(--hand);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.workbench .essence-more {
+  font-family: var(--hand);
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-style: italic;
+  align-self: center;
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* ---- Stat bars (potency / duration / stability / control) ---- */
+.workbench .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 12px;
+}
+@media (max-width: 600px) {
+  .workbench .stats-grid { grid-template-columns: 1fr; }
+}
+.workbench .stat-bar {
+  display: grid;
+  grid-template-columns: minmax(70px, auto) 1fr auto;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--serif);
+  font-size: 12px;
+  color: var(--ink);
+}
+.workbench .stat-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-style: italic;
+  color: var(--ink-mid);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.workbench .stat-glyph {
+  font-style: normal;
+  color: var(--ink-soft);
+  font-size: 12px;
+  width: 12px;
+  text-align: center;
+}
+.workbench .stat-track {
+  position: relative;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(80, 50, 20, 0.15);
+  border: 1px solid rgba(80, 50, 20, 0.30);
+  overflow: hidden;
+  box-shadow: inset 0 1px 1px rgba(80, 50, 20, 0.30);
+}
+.workbench .stat-fill {
+  --p: 0%;
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--p);
+  border-radius: 999px;
+  transition: width 220ms cubic-bezier(0.34, 1.4, 0.64, 1), background 200ms ease;
+  background: linear-gradient(180deg, #6dd39a 0%, #2c8a5e 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.workbench .stat-bar.mid .stat-fill {
+  background: linear-gradient(180deg, #f0c36d 0%, #c98a26 100%);
+}
+.workbench .stat-bar.low .stat-fill {
+  background: linear-gradient(180deg, #ef6f7a 0%, #a02c34 100%);
+}
+.workbench .stat-value {
+  font-family: var(--hand);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  min-width: 24px;
+  text-align: right;
+  letter-spacing: 0.02em;
+}
+.workbench .stat-bar.low .stat-value { color: #8a2c2c; }
+.workbench .stat-bar.mid .stat-value { color: #6a4a10; }
+
+/* ---- Notices strip + trait pills ---- */
+.workbench .notices-strip {
+  background: transparent;
+  border: 1px dashed rgba(80, 50, 20, 0.25);
+  padding: 8px 10px;
+}
+.workbench .trait-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.workbench .notices-strip .trait-strip:last-child { margin-bottom: 0; }
+.workbench .notices-strip .trait-strip + .notices,
+.workbench .notices {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.workbench .notice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--serif);
+  font-size: 12px;
+  font-style: italic;
+  padding: 4px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(80, 50, 20, 0.30);
+  background: rgba(255, 245, 215, 0.45);
+  color: var(--ink);
+  line-height: 1.3;
+}
+.workbench .notice .notice-icon {
+  font-size: 13px;
+  flex-shrink: 0;
+  font-style: normal;
+}
+.workbench .notice.cap        { background: rgba(239, 111, 122, 0.15); color: #7a2020; border-color: rgba(180, 60, 60, 0.45); }
+.workbench .notice.antagonist { background: rgba(255, 154, 118, 0.18); color: #7a3a14; border-color: rgba(255, 154, 118, 0.55); }
+.workbench .notice.instant    { background: rgba(176, 131, 255, 0.18); color: #4a2c80; border-color: rgba(120, 80, 180, 0.45); }
+.workbench .notice.info       { background: rgba(120, 100, 60, 0.10); color: var(--ink-mid); border-color: rgba(80, 50, 20, 0.30); border-style: dashed; }
+
+.workbench .chip.trait .trait-count {
+  font-family: var(--hand);
+  font-weight: 700;
+  margin-left: 2px;
+  opacity: 0.85;
+}
+
+/* ============================================================================
+   CAULDRON VISUALIZATION POLISH — intensity scaling + splash feedback
+   ----------------------------------------------------------------------------
+   `--cauldron-intensity` (0..1, set from JS via updateCauldronVisual) drives
+   the fire's height/opacity, the steam plume's density, and the brew glow.
+   `--splash-color` is set by pulseCauldronSplash and tints the rim flash
+   when an ingredient drops in.
+   ============================================================================ */
+
+/* Subtle ambient glow under the cauldron tinted by the dominant essence
+   (via --brew-color from the brew liquid). Pulses with intensity. */
+.workbench .cauldron-visual::before {
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  width: calc(170px + 30px * var(--cauldron-intensity, 0));
+  height: 36px;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(ellipse at center,
+      color-mix(in srgb, var(--brew-color, #6a4f9a) 60%, transparent) 0%,
+      transparent 75%);
+  filter: blur(10px);
+  opacity: calc(0.25 + 0.5 * var(--cauldron-intensity, 0));
+  pointer-events: none;
+  z-index: 0;
+  transition: width 320ms ease, opacity 320ms ease;
+}
+
+/* Fire scales: more parts = larger, brighter flames. */
+.workbench .cauldron-visual .cauldron-fire {
+  transform: translateX(-50%) scale(calc(0.85 + 0.3 * var(--cauldron-intensity, 0)));
+  transform-origin: 50% 100%;
+  filter: brightness(calc(0.9 + 0.25 * var(--cauldron-intensity, 0)));
+  transition: transform 320ms ease, filter 320ms ease;
+}
+.workbench .cauldron-visual .ember-glow {
+  opacity: calc(0.5 + 0.5 * var(--cauldron-intensity, 0));
+}
+
+/* Steam scales: more parts = denser, brighter plume. */
+.workbench .cauldron-visual .steam {
+  opacity: calc(0.4 + 0.6 * var(--cauldron-intensity, 0));
+}
+.workbench .cauldron-visual:not(.has-brew) .steam-column { opacity: 0.25; }
+
+/* Brew glow tracks intensity too. */
+.workbench .cauldron-visual.has-brew .brew-liquid {
+  box-shadow:
+    inset 0 -4px 8px rgba(0, 0, 0, 0.4),
+    0 0 calc(16px + 12px * var(--cauldron-intensity, 0)) var(--brew-color, #6a4f9a);
+}
+
+/* Volatile (antagonist pairs present) — angry red rim shimmer. */
+.workbench .cauldron-visual.is-volatile .cauldron-rim {
+  box-shadow:
+    inset 0 -3px 4px rgba(0, 0, 0, 0.7),
+    0 2px 6px rgba(0, 0, 0, 0.5),
+    0 0 14px rgba(239, 111, 122, 0.45);
+  animation: volatile-shimmer 2.2s ease-in-out infinite;
+}
+@keyframes volatile-shimmer {
+  0%, 100% { filter: hue-rotate(0deg)   brightness(1);    }
+  50%      { filter: hue-rotate(-12deg) brightness(1.10); }
+}
+
+/* Splash: brief rim flash + brew bump when an ingredient is dropped in. */
+.workbench .cauldron-visual.splash .cauldron-rim {
+  animation: rim-splash 700ms ease-out;
+}
+.workbench .cauldron-visual.splash .brew-liquid {
+  animation: brew-splash 700ms ease-out;
+}
+.workbench .cauldron-visual.splash::after {
+  content: "";
+  position: absolute;
+  top: 38px;
+  left: 50%;
+  width: 180px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--splash-color, var(--brew-color, #b083ff));
+  transform: translateX(-50%) scale(0.6);
+  opacity: 0;
+  filter: blur(6px);
+  pointer-events: none;
+  z-index: 5;
+  animation: splash-ring 700ms ease-out forwards;
+}
+@keyframes rim-splash {
+  0%   { transform: translateX(-50%) scale(1); }
+  35%  { transform: translateX(-50%) scale(1.04); box-shadow: inset 0 -3px 4px rgba(0,0,0,0.7), 0 2px 12px var(--splash-color, rgba(255, 245, 200, 0.6)); }
+  100% { transform: translateX(-50%) scale(1); }
+}
+@keyframes brew-splash {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(-2px); filter: brightness(1.25) saturate(1.3); }
+  100% { transform: translateY(0); }
+}
+@keyframes splash-ring {
+  0%   { opacity: 0;    transform: translateX(-50%) scale(0.5); }
+  30%  { opacity: 0.85; transform: translateX(-50%) scale(1);   }
+  100% { opacity: 0;    transform: translateX(-50%) scale(1.4); }
+}
+
+/* Reduced motion: drop the splash + status pulses but keep everything else. */
+@media (prefers-reduced-motion: reduce) {
+  .workbench .cauldron-visual.splash .cauldron-rim,
+  .workbench .cauldron-visual.splash .brew-liquid,
+  .workbench .cauldron-visual.splash::after,
+  .workbench .cauldron-status.status-volatile,
+  .workbench .cauldron-status.status-brimming,
+  .workbench .parts-fill-bar.at-cap,
+  .workbench .cauldron-visual.is-volatile .cauldron-rim {
+    animation: none;
+  }
+}
+
+/* ---- Tighten the panel grid on cramped widths so cauldron + dashboard
+       stay usable side-by-side instead of stacking too early. ---- */
+@media (max-width: 980px) {
+  .workbench .cauldron-row { grid-template-columns: 200px 1fr; gap: 16px; }
+  .workbench .cauldron-contents { padding: 14px 14px 14px; }
+  .workbench .cauldron-title-row h2 { font-size: 15px; letter-spacing: 0.14em; }
+}
+@media (max-width: 720px) {
+  .workbench .cauldron-row { grid-template-columns: 1fr; }
+  .workbench .cauldron-visual { align-self: center; }
+}
