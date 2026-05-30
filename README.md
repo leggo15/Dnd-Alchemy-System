@@ -98,3 +98,12 @@ it's served from the site root or under a subpath.
 - **↓** closes the open book and returns to the stack.
 - The **Book Select** pill (top-right of the open book) returns to the
   stack without using the keyboard.
+
+## On a phone
+
+The two-page spread needs width a portrait phone doesn't have, so on narrow
+portrait screens the whole interface rotates 90° — it's meant to be read with
+the phone held sideways (turn the phone, or just rotate the device if
+auto-rotate is on). Because a CSS rotation would break Turn.js's drag-to-flip
+math, the open book gets invisible **tap zones**: tap the right side to flip
+forward, the left side to flip back.

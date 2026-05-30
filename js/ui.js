@@ -265,9 +265,16 @@ function packPageProseBlocks(blocks, headerHtml) {
     for (const block of norm) {
       prose.insertAdjacentHTML("beforeend", block.html);
       const last = prose.lastElementChild;
-      const lastBottom =
-        last.getBoundingClientRect().bottom -
-        scratch.getBoundingClientRect().top;
+      // Measure with layout offsets, NOT getBoundingClientRect: on phones the
+      // whole UI is rotated 90° (forced landscape), and getBoundingClientRect
+      // reports screen-space coordinates — so a rotated element's vertical
+      // extent would be read as its width (~290) instead of its height (~410),
+      // wildly under-measuring and cramming many pages of prose onto one leaf.
+      // offsetTop/offsetHeight are pre-transform layout metrics, immune to the
+      // rotation (and to the --page-scale transform), and give the same result
+      // as the old rect math when nothing is transformed. `scratch` is
+      // position:absolute, so it is `last`'s offsetParent.
+      const lastBottom = last.offsetTop + last.offsetHeight;
 
       if (curBlocks.length === 0) {
         // Always keep at least one block on a page even if it overflows on
@@ -337,6 +344,27 @@ function makeLeaf(extraCls, innerHTML) {
   return outer;
 }
 
+// Assemble the full leaf list for a book: front hard covers, the packed
+// content leaves, then the back hard covers. Each leaf is tagged with
+// --left / --right so the gutter shadows / margin rules in styles.css can
+// target them. In Turn.js display:'double' mode page 1 sits on the right by
+// itself, then even pages go on the left and odd pages on the right. In
+// single-page mode the side class is harmless (one page is shown at a time).
+function buildAllNodes(state, pages) {
+  const allNodes = [
+    ...buildHardCoverPages("front", state),
+    ...buildPageElements(pages),
+    ...buildHardCoverPages("back", state),
+  ];
+  allNodes.forEach((node, idx) => {
+    const sideClass = (idx + 1) % 2 === 0 ? "--left" : "--right";
+    node.classList.add(sideClass);
+    const inner = node.firstElementChild;
+    if (inner) inner.classList.add(sideClass);
+  });
+  return allNodes;
+}
+
 function renderBook(state) {
   const container = $("#book-flip");
   if (!container) return;
@@ -354,6 +382,7 @@ function renderBook(state) {
     container.style.width = "";
     container.style.height = "";
     removeBookSelectButton();
+    removeTapZones();
     renderBookStack(container, state);
     state.pages = [];
     state.currentPage = 1;
@@ -369,23 +398,7 @@ function renderBook(state) {
   state.bookPages[state.currentBookId] = pages;
   state.pages = pages;
 
-  const contentNodes = buildPageElements(pages);
-  // Wrap content between front and back hard covers.
-  const allNodes = [
-    ...buildHardCoverPages("front", state),
-    ...contentNodes,
-    ...buildHardCoverPages("back", state),
-  ];
-  // Tag each leaf with --left / --right so the gutter shadows / margin
-  // rules in styles.css can target them. In Turn.js display:'double' mode
-  // page 1 sits on the right by itself, then even pages go on the left and
-  // odd pages on the right.
-  allNodes.forEach((node, idx) => {
-    const sideClass = (idx + 1) % 2 === 0 ? "--left" : "--right";
-    node.classList.add(sideClass);
-    const inner = node.firstElementChild;
-    if (inner) inner.classList.add(sideClass);
-  });
+  const allNodes = buildAllNodes(state, pages);
 
   const jq = getTurn();
   if (jq) {
@@ -397,6 +410,7 @@ function renderBook(state) {
   }
 
   ensureBookSelectButton(state);
+  ensureTapZones(state);
 
   // The first packer pass can run before web fonts (IM Fell English,
   // Cinzel, Caveat) have settled. With fallback metrics the line-box is a
@@ -439,18 +453,7 @@ function scheduleAccuratePackPass(state) {
     // Page count or content moved — rebuild Turn.js from scratch.
     state.pages = newPages;
     state.bookPages[state.currentBookId] = newPages;
-    const contentNodes = buildPageElements(newPages);
-    const allNodes = [
-      ...buildHardCoverPages("front", state),
-      ...contentNodes,
-      ...buildHardCoverPages("back", state),
-    ];
-    allNodes.forEach((node, idx) => {
-      const sideClass = (idx + 1) % 2 === 0 ? "--left" : "--right";
-      node.classList.add(sideClass);
-      const inner = node.firstElementChild;
-      if (inner) inner.classList.add(sideClass);
-    });
+    const allNodes = buildAllNodes(state, newPages);
     const container = document.getElementById("book-flip");
     if (container) hardResetBook(state, container, allNodes);
   };
@@ -522,7 +525,7 @@ function hardResetBook(state, container, pageNodes) {
   setLeafScaleVar(dims.scale);
 
   state.turnInst = jq(container).turn({
-    width: dims.spreadW,
+    width: dims.turnW,
     height: dims.pageH,
     autoCenter: true,
     display: "double",
@@ -545,36 +548,53 @@ function hardResetBook(state, container, pageNodes) {
   });
 }
 
-// Compute spread / page pixel size that fits inside #book's inner width,
+// A two-page spread needs width. On a portrait phone there isn't enough, so
+// index.html rotates the ENTIRE interface 90° (the "turn your phone sideways"
+// pattern) via a CSS media query. When that rotation is active the app's
+// visual axes are swapped relative to the device: the screen's *width* is the
+// book's available height, and the screen's *height* is its available width.
+// This must stay in sync with the `(orientation: portrait) and
+// (max-width: 900px)` media query in index.html.
+function isForcedLandscape() {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(orientation: portrait) and (max-width: 900px)").matches;
+}
+
+// Compute the spread / page pixel size that fits inside #book's inner width,
 // plus the matching scale for the logical 290×410 inner pages.
 //
-// The spread is also clamped to the viewport's available height (with a
-// little margin) so that on short windows the book never overflows the
-// screen vertically — height is the binding constraint in landscape, width
-// in portrait.
+// The spread is clamped to the available *visual* height (with a little
+// margin) so the book never overflows the screen vertically. When the UI is
+// rotated to forced landscape, the visual height is the device's width, so we
+// swap innerWidth/innerHeight accordingly.
 function computeBookDims() {
   const book = document.getElementById("book");
-  if (!book) return { spreadW: PAGE_FLIP_SPREAD_W, pageH: PAGE_FLIP_PAGE_H, scale: 1 };
+  if (!book) return { turnW: PAGE_FLIP_SPREAD_W, pageH: PAGE_FLIP_PAGE_H, scale: 1 };
   const cs = getComputedStyle(book);
   const pl = parseFloat(cs.paddingLeft)  || 0;
   const pr = parseFloat(cs.paddingRight) || 0;
   const inner = Math.max(0, book.clientWidth - pl - pr);
 
-  // How tall is the viewport? Reserve a bit for the workbench padding,
-  // candle, and corner studs so the book never grazes the table frame.
-  const vh = (typeof window !== "undefined" && window.innerHeight) || 800;
-  const heightBudget = Math.max(280, vh - 120);
+  const forced = isForcedLandscape();
+  const winW = (typeof window !== "undefined" && window.innerWidth)  || 1200;
+  const winH = (typeof window !== "undefined" && window.innerHeight) || 800;
+  // Visual vertical space. Rotated → the device's width is "up"; otherwise
+  // it's the real height.
+  const vph = forced ? winW : winH;
+  // Phones (rotated, or a genuinely short landscape window) reserve far less
+  // chrome around the book than the roomy desktop workbench.
+  const tight = forced || winH <= 600 || winW <= 900;
+  const heightBudget = Math.max(240, vph - (tight ? 48 : 120));
   const widthFromHeight = heightBudget * (PAGE_FLIP_SPREAD_W / PAGE_FLIP_PAGE_H);
 
-  // No longer cap at the logical PAGE_FLIP_SPREAD_W — modern browsers
-  // re-rasterize transformed text at the target pixel size, so up-scaling
-  // is sharp. The page packer keeps measuring against the logical 290×410
-  // box, then we apply CSS `transform: scale(--page-scale)` to grow it
-  // visually to whatever fits the column.
+  // No hard cap at the logical PAGE_FLIP_SPREAD_W — modern browsers
+  // re-rasterize transformed text at the target pixel size, so up-scaling is
+  // sharp. The packer keeps measuring against the logical 290×410 box, then
+  // CSS `transform: scale(--page-scale)` grows it to fill the column.
   const spreadW = Math.max(120, Math.floor(Math.min(inner, widthFromHeight)));
   const pageH   = Math.round(spreadW * (PAGE_FLIP_PAGE_H / PAGE_FLIP_SPREAD_W));
   const scale   = spreadW / PAGE_FLIP_SPREAD_W;
-  return { spreadW, pageH, scale };
+  return { turnW: spreadW, pageH, scale };
 }
 
 // Push the current logical→pixel scale into a CSS var so the inner
@@ -586,13 +606,19 @@ function setLeafScaleVar(scale) {
 }
 
 // Resize the live Turn.js instance in place — no destroy/reinit, no flicker.
+// An orientation change (which can toggle the forced-landscape rotation)
+// fires a window resize, so recomputing the dims here keeps the spread fitted
+// whether the UI is rotated or not.
 function resizeBook(state) {
   if (!state || !state.turnInst) return;
   const dims = computeBookDims();
   setLeafScaleVar(dims.scale);
   try {
-    state.turnInst.turn("size", dims.spreadW, dims.pageH);
+    state.turnInst.turn("size", dims.turnW, dims.pageH);
   } catch (e) { /* ignore — turn.js can throw mid-animation */ }
+  // A resize can cross the touch/phone threshold (e.g. rotating a tablet),
+  // so keep the tap zones in sync with the current viewport.
+  if (state.currentBookId) ensureTapZones(state);
 }
 
 let bookScaleObserverBound = false;
@@ -614,11 +640,19 @@ function ensureBookFlipScaleObserver(state) {
   // closed-stack mode where each book's offset is computed from the
   // viewport width — without this re-render, the three cover slabs would
   // stay glued to their original spread when the window grows or shrinks.
-  window.addEventListener("resize", () => {
+  const refit = () => {
     requestAnimationFrame(() => {
       if (state.currentBookId) resizeBook(state);
       else renderBook(state);
     });
+  };
+  window.addEventListener("resize", refit);
+  // Rotating the device toggles the forced-landscape CSS rotation. Most
+  // browsers fire `resize` for this, but `orientationchange` is the reliable
+  // signal — and the post-rotate viewport metrics aren't ready until the next
+  // frame, so we defer the refit.
+  window.addEventListener("orientationchange", () => {
+    setTimeout(refit, 50);
   });
 }
 
@@ -663,6 +697,51 @@ function ensureBookSelectButton(state) {
     document.body.appendChild(btn);
   }
   updateBookSelectButtonVisibility(state);
+}
+
+// Touch screens don't have arrow keys, and the forced-landscape rotation on
+// phones puts a CSS transform on a Turn.js ancestor — which the code warns
+// breaks Turn.js's drag-to-flip coordinate math. So on touch / small screens
+// we overlay two invisible tap zones on the open book: tapping the left half
+// flips back, the right half flips forward. These call turn("previous") /
+// turn("next") programmatically, so they work regardless of any rotation.
+//
+// In screen space the zones rotate with the rest of the UI, but because the
+// content rotates with them, "left = back / right = forward" stays correct
+// from the reader's point of view once the phone is held sideways.
+function isTouchOrPhone() {
+  if (typeof window === "undefined") return false;
+  const coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+  return coarse || (window.innerWidth || 1200) <= 900;
+}
+
+function ensureTapZones(state) {
+  const book = document.getElementById("book");
+  if (!book) return;
+  if (!isTouchOrPhone()) { removeTapZones(); return; }
+  if (book.querySelector(".book-tap-zones")) return;
+
+  const zones = document.createElement("div");
+  zones.className = "book-tap-zones";
+  zones.setAttribute("aria-hidden", "true");
+
+  const makeZone = (cls, dir) => {
+    const z = document.createElement("button");
+    z.type = "button";
+    z.className = `book-tap-zone ${cls}`;
+    z.tabIndex = -1;
+    z.addEventListener("click", () => flipBook(state, dir));
+    return z;
+  };
+
+  zones.appendChild(makeZone("book-tap-prev", -1));
+  zones.appendChild(makeZone("book-tap-next",  1));
+  book.appendChild(zones);
+}
+
+function removeTapZones() {
+  const zones = document.querySelector(".book-tap-zones");
+  if (zones) zones.remove();
 }
 
 // Kept for clarity at call-sites; the button is intentionally NOT removed
@@ -710,9 +789,26 @@ function renderStackBook(book, index, selectedIndex, total) {
   // .book-stack-item, then multiplied by 0.95 for a slight overlap (that
   // "stacked on the table" feel). Wider viewport → wider books → wider
   // gaps; narrow viewport → tighter stack that still fits the shelf.
-  const vw = (typeof window !== "undefined" && window.innerWidth) || 1200;
-  const itemW = Math.max(240, Math.min(340, vw * 0.26));
-  const span = Math.round(itemW * 0.95);
+  // Horizontal room available to the shelf. When the UI is rotated to forced
+  // landscape, that room is the device's *height*, not its width. These
+  // figures mirror the `.book-stack-item` clamps in index.html per breakpoint.
+  const forced = isForcedLandscape();
+  let itemW, spanFactor;
+  if (forced) {
+    const avail = (typeof window !== "undefined" && window.innerHeight) || 800;
+    itemW = Math.max(160, Math.min(300, avail * 0.22));
+    spanFactor = 0.9;
+  } else {
+    const vw = (typeof window !== "undefined" && window.innerWidth) || 1200;
+    if (vw <= 600) {
+      itemW = Math.max(130, Math.min(190, vw * 0.42));
+      spanFactor = 0.6;
+    } else {
+      itemW = Math.max(240, Math.min(340, vw * 0.26));
+      spanFactor = 0.95;
+    }
+  }
+  const span = Math.round(itemW * spanFactor);
   const center = (total - 1) / 2;
   const offsetX = Math.round((index - center) * span);
   const tilts = [-8, 3, 9, -5, 6];

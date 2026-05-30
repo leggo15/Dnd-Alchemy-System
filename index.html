@@ -129,6 +129,35 @@
       line-height: 1;
     }
 
+    /* ----- Tap-to-flip zones (touch / phones) -----------------------
+       Added by ui.js over the open book only on touch / small screens.
+       They sit above the pages and drive turn("previous"/"next")
+       programmatically, so flipping works even though the forced-landscape
+       rotation puts a transform on a Turn.js ancestor (which would
+       otherwise break its drag math). A gap is left down the middle so the
+       gutter isn't covered. */
+    .book-tap-zones {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      pointer-events: none;
+    }
+    .book-tap-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 42%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      pointer-events: auto;
+    }
+    .book-tap-prev { left: 0; }
+    .book-tap-next { right: 0; }
+
     /* ----- Candle perched above the back panel ----------------------
        Originally the candle sat *inside* the workbench (top: 18px right:
        46px, clipped by .workbench's overflow: hidden). Lift it so it
@@ -182,6 +211,75 @@
       }
       .wb-candle--tall {
         right: calc(22px + 22px);
+      }
+    }
+
+    /* ----- Portrait phone: turn the whole thing sideways -------------
+       A two-page spread needs width that a portrait phone simply doesn't
+       have. Rather than cram it, we rotate the ENTIRE interface 90° (the
+       familiar "rotate your device" pattern) so the book is meant to be
+       read with the phone held sideways. If the user has auto-rotate on,
+       physically turning the phone makes the OS report `landscape`, this
+       query stops matching, and the (already wide) landscape layout below
+       takes over — so it reads upright either way.
+
+       Mechanics: the <body> is rotated -90° about its top-left corner and
+       parked at the bottom-left of the viewport. Its box is sized with the
+       axes swapped (width:100vh, height:100vw) so, once rotated, it covers
+       the screen exactly. NB: vw/vh still refer to the *physical* viewport
+       after rotation, so any horizontal sizing inside uses vh and any
+       vertical sizing uses vw. The JS in ui.js mirrors this swap. */
+    @media (orientation: portrait) and (max-width: 900px) {
+      html, body { overflow: hidden; }
+      /* Fill behind the rotated body so no sliver of page shows at the edges. */
+      html { background: #14100a; }
+      body {
+        position: absolute;
+        top: 100vh;
+        left: 0;
+        width: 100vh;
+        height: 100vw;
+        /* Base body sets min-height:100vh, which would beat height:100vw in
+           portrait and wreck the rotation box — neutralise it. */
+        min-height: 100vw;
+        transform-origin: top left;
+        transform: rotate(-90deg);
+      }
+      main { padding: clamp(8px, 1.6vh, 20px); }
+      .workbench { max-width: 96vh; }
+
+      .workbench .book-flip.book-stack-mode { min-height: clamp(240px, 70vw, 380px); }
+      .workbench .book-stack-shell {
+        width: 100%;
+        height: clamp(240px, 70vw, 380px);
+      }
+      /* Width runs along the (long) physical height → vh; height runs along
+         the (short) physical width → expressed in vh too but kept below the
+         available vw so the covers never clip top/bottom. */
+      .workbench .book-stack-item {
+        width: clamp(160px, 22vh, 300px);
+        height: clamp(220px, 30vh, 410px);
+      }
+      .workbench .book-stack-item .hard-cover-glyph { font-size: clamp(34px, 4.4vh, 56px); }
+      .workbench .book-stack-item .hard-cover-title { font-size: clamp(16px, 2vh, 24px); }
+      .workbench .book-stack-item .hard-cover-subtitle { font-size: clamp(12px, 1.6vh, 18px); }
+    }
+
+    /* ----- Landscape phone (auto-rotate ON): use the wide, short space ---
+       No CSS rotation here — the OS already gave us a landscape viewport.
+       We just trim the chrome so the height-constrained spread is as large
+       as possible. ui.js detects the short viewport and reserves less
+       margin to match. */
+    @media (orientation: landscape) and (max-height: 600px) {
+      main { padding: clamp(6px, 1.4vh, 14px); }
+      .workbench { max-width: 98vw; }
+    }
+
+    /* Slightly larger tap target for the return pill on touch screens. */
+    @media (max-width: 900px) {
+      #book-select-btn {
+        padding: 10px 18px;
+        font-size: 15px;
       }
     }
   </style>
